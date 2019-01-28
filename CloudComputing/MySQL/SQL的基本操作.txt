@@ -1,0 +1,156 @@
+一、数据库的操作：
+1、create database company;  # 创建数据库
+2、show databases;  # 查看数据库
+3、use company;  # 作用数据库
+
+二、表的操作：
+1、create table offices (
+->     officeCode INT(10) NOT NULL UNIQUE,  //以逗号分割
+    
+->     city VARCHAR(50) NOT NULL,
+    
+->     address VARCHAR(50) NOT NULL,
+    
+->     country VARCHAR(50) NOT NULL,
+    
+->     PRIMARY KEY (officeCode)
+   //设置主键 
+-> );创建表
+
+列名  类型  长度  小数点  不是null
+
+2、show tables;  # 显示表格
+
+3、desc offices;  # 显示结构
+
+4、create table employees
+    
+-> (
+    
+->     employeeNumber INT(11) PRIMARY KEY NOT NULL UNIQUE AUTO_INCREMENT,
+    
+->     lastName VARCHAR(50) NOT NULL,
+    
+->     firstName VARCHAR(50) NOT NULL,
+    
+->     mobile VARCHAR(25) NOT NULL,
+    
+->     officeCode INT(10) NOT NULL,
+    
+->     CONSTRAINT office_fk FOREIGN KEY(officeCode) REFERENCES offices(officeCode)  
+    
+-> );
+
+注意外键的创建， MySQL通过外键约束来保证表与表之间的数据的完整性和准确性。外键关系的两个表的列必须是数据类型相似，主要目的是控制存储在外键表中的数据
+
+5、select * from company; # 查看表  
+
+
+
+面试题001：什么是MySQL多实例，如何配置MySQL多实例？
+
+(https://www.cnblogs.com/xuchenliang/p/6843990.html)
+mysql多实例，简单理解就是在一台服务器上，mysql服务开启多个不同的端口（如3306、3307），运行多个服务进程。
+这些 mysql 服务进程通过不同的 socket来监听不同的数据端口，进而互不干涉的提供各自的服务。
+1、基于多配置文件
+通过使用多个配置文件来启动不同的进程，以此来实现多实例。
+优点：逻辑简单，配置简单
+缺点：管理起来不方便
+2、基于mysqld_multi
+通过官方自带的 mysqld_multi 工具，使用单独配置文件来实现多实例
+优点： 便于集中管理管理
+缺点： 不方便针对每个实例配置进行定制
+3、基于IM
+使用 MySQL 实例管理器（MYSQLMANAGER），这个方法好像比较好不过也有点复杂
+优点：便于集中管理
+缺点：耦合度高。IM一挂，实例全挂
+不方便针对每个实例配置进行定制
+
+面试题002：如何加强MySQL数据的安全，请你给出可行的思路？
+
+1、删除数据库不使用的默认用户
+
+2、配置相应的权限（包括远程连接）
+
+3、不可在命令行界面下输入数据库的密码
+
+4、定期修改密码与加强密码的复杂度
+面试题003：企业中MySQL root密码忘了怎么解决，多实例密码忘了又如何解决？
+
+1、用命令编辑/etc/my.cnf配置文件，即：vim /etc/my.cnf 或者 vi /etc/my.cnf 或者 nano /etc/my.cnf
+2.在[mysqld]下添加skip-grant-tables，然后保存并退出
+3.重启mysql服务：service mysqld restart
+4、重启以后，执行mysql命令进入mysql命令行
+5、修改root用户密码
+MySQL> UPDATE mysql.user SET Password=PASSWORD('新密码') where USER='root';
+MySQL> flush privileges;
+MySQL> exit
+6、最后把/etc/my.cnf中的skip-grant-tables注释掉，然后重启mysql，即：service mysqld restart
+OK，下面我们就可以使用root新的密码登录MySQL了。
+　
+　http://blog.51cto.com/gagarin/1423695
+面试题004：MySQL库授权oldboy用户管理bbs库的所有表，172.16.1.0整个网段访问，密码是123456，请给出详细命令(不低于2种方法)?
+
+grant select,create,insert,update on clsn.* to 'oldboy'@'172.16.1.0' identified by '123456'
+grant select,create,insert,update on clsn.* to 'oldboy'@'172.16.1.%' identified by '123456'
+
+面试题005：delete from test和truncate table test区别？
+
+自增长约束前者不能重置,后者可以重置
+
+面试题006：MySQL 的SQL语句如何优化？ 提示：注意解答问题的高度和宽度
+
+建立主键与增加索引
+面试题007：网站打开慢，请给出排查方法，如果是因为数据库慢导致，如何排查并解决，请分析并举例？提示：注意解答问题的高度和宽度
+
+1、可以使用top free 等命令分析系统性能等方面的问题
+2、如是因为数据库的原因造成的，就需要查看慢查询日志去查找并分析问题所在
+面试题008：MySQL Sleep线程过多如何解决？
+
+1、可以杀掉sleep进程，kill PID
+
+2、修改配置，重启服务
+面试题009：key_buffer_size参数作用，如何修改这个参数不重启数据库就可以生效？
+
+面试题010：MySQL binlog的工作模式有哪些？各有什么特点，企业中如何选择？
+
+1.Row(行模式)；
+
+日志中会记录成每一行数据被修改的形式，然后在slave端再对相同的数据进行修改
+
+2.Statement(语句模式)
+
+每一条修改的数据都会完整的记录到主库master的binlog里面，在slave上完整执行在master执行的sql语句
+
+3.mixed(混合模式)
+
+结合前面的两种模式，如果在工作中有使用函数 或者触发器等特殊功能需求的时候，使用混合模式
+
+数据量达到比较高时候，它就会选择 statement模式，而不会选择Row Level行模式
+面试题011：工作中数据库被误操作执行了一个删除的SQL语句，你如何完整恢复丢失的数据？提示：注意解答问题的高度、宽度、实战性。
+
+1、停止主从复制，在主库上执行锁表并刷新binlog操作，接着恢复之前的全备文件（比如0点的全备）
+2、将0点时的binlog文件与全备到故障期间的binlog文件合并导出成sql语句
+mysqlbinlog --no-defaults mysql-bin.000011 mysql-bin.000012 >bin.sql
+3、将导出的sql语句中drop语句删除，恢复到数据库中 
+mysql -uroot -pmysql123 < bin.sql
+面试题012：企业中MySQLDUMP备份时使用了-A -B参数，请问此时如何进行单表单库恢复？
+
+-A 此参数作用是备份所有数据库（相当于–all-databases）
+
+-B databasename 备份指定数据（单库备份使用）
+面试题013：详细MySQL主从同步的原理及配置主从的完整步骤。
+
+主从复制的原理如下：
+主库开启binlog功能并授权从库连接主库，从库通过change master得到主库的相关同步信息,然后连接主库进行验证，主库IO线程根据从库slave线程的请求，从master.info开始记录的位置点向下开始取信息，
+同时把取到的位置点和最新的位置与binlog信息一同发给从库IO线程，从库将相关的sql语句存放在relay-log里面，最终从库的sql线程将relay-log里的sql语句应用到从库上，至此整个同步过程完成，之后将是无限重复上述过程
+完整步骤如下：
+
+1、主库开启binlog功能，并进行全备，将全备文件推送到从库服务器上
+2、show master status\G 记录下当前的位置信息及二进制文件名
+3、登陆从库恢复全备文件
+4、执行change master to 语句
+5、执行start slave and show slave status\G
+
+
+

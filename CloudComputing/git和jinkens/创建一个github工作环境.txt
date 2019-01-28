@@ -1,0 +1,33 @@
+一、ssh-keygen -t rsa  | 生成公钥
+二、cd ~/.ssh  | 进入密钥目录(注意是隐藏目录用ls -a)
+三、cat id_rsa.pub  得到公钥
+四、复制公钥到github的自己的帐户上，设置公钥(自己)
+五、创建一个新的项目，将HTTPS改成SSH
+六、进入git目录，git clone git@github.com:Chaliive/new_dir.git
+七、进入下载的new_dir
+八、进行编辑提交：
+
+vi wl5.txt
+git add wl5.txt
+git commit -m "wl5"
+git push
+git push -u origin master  # 初次提交
+
+公钥类似：
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC8Aaj2OIFlJXlkzAjA5V2ltK19bsmVZAzfPAGiD58+OPFKwnU+6FvhNYxdEcyIM/B6GSDQLxoDKBwuVRRULBWaW/ZJRm077mfIUfcl6MU8ptR8lvxKCSw1dn+pJUt5VazQSUHwFLwsgn9hThT8Hcs6fO75+HtoAWaTyECZFUhIS7go0bmyhjzhlEo27VySDV6Gw4tLahT9la6X/7i897T00H/UTP+wEQKbeFxtBY4RZvnwGnQXigffLIIKkXyfK48evQj78+Z2Zg3erAgf+H2lPBgJUkb7uAgpBoFnmE87S9Yzq9WcMGsw+OvE4K9h1rRlUUtEKbnGj1vTbBRZCXcj root@mwce.www.mwce.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

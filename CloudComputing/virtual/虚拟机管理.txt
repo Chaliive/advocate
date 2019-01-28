@@ -1,0 +1,46 @@
+管理虚拟机：
+图形化管理
+virt-manager
+命令行管理：
+virt-install 
+
+qemu-kvm
+
+
+说说kvm：
+之前kvm是两种模式
+现在是三种模式用户，客户，内核
+root，non-root，两种模式通过cpu硬件辅助虚拟化切换
+客户的命令-->用户通过qemu调用/dev/kvm-->内核
+
+
+qemu-img管理镜像，即raw(原生态的，用dd命令创建出来的)或qcow2(copy on write可以做快照)文件 
+
+
+冷迁移：import image qcow2文件
+
+
+加载KVM模块
+启动libvirt
+qemu-kvm位于/usr/libexec 目录中
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

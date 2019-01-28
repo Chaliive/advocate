@@ -1,0 +1,20 @@
+打开vncserver
+打开
+
+配置好VNC和noVNC后：
+systemctl enable vncserver@:1.service # 开机自启
+
+
+
+
+
+
+
+一个模板镜像磁盘.qcow2文件和.xml文件，先在这两个文件中配置好一个vnc服务和onVNC，并且写一个开机自启动的脚本。还要关闭防火墙
+
+创建虚拟机就是对两个文件的复制，由于事先已经配置好了，所以vnc和noVNC等，现在的问题就是ip的获取或者说ip的分配
+
+
+
+
+

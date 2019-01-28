@@ -1,0 +1,275 @@
+shell 脚本：
+1.直接给权限，直接运行脚本
+chmod a+x test.sh
+开启了一个子进程，在子进程中执行，子进程不能传递变量到父进程中
+
+2.没有权限，通过bash运行脚本
+bash test.sh 
+#!/bin/bash 不需要
+
+3.没有权限，通过.source运行脚本
+.test.sh 是在当前shell环境中执行，变量是可以获得的
+
+shell的概念
+是提供用户与内核的一种交互，是解释器
+shell的命令有：
+1.Linux命令 /bin /sbin
+2.内置命令 将一些常用的命令的构造与shell内部
+3.实用程序 /usr/bin /usr/sbin /usr/local/bin
+4.用户程序(可执行的程序)和shell脚本
+
+shell的主要版本：
+bash 大多数的Linux默认的shell
+ash 是Linux系统占用资源最少的一个shell，只有24个命令，不常用，不方便
+sh ksh 是UNIX的标准shell
+csh(tsh) 是面向c语言的shell
+
+格式：
+cmd [option] [arguments]
+
+通配符
+* 匹配任何字符和任何数目的字符
+？匹配任何单一数目的任何字符
+[] 匹配[]之内的任意字符
+[!] 匹配[]之外的任意字符，!表示非的意思
+
+
+第一个脚本程序：
+#!/bin/bash
+
+变量：
+定义变量，
+var="" 定义
+${var} 或$var取值
+
+只读变量
+#! /bin/bash
+var="various"
+readonly var # 只读变量
+
+删除变量：
+unset var
+
+变量的类型
+局部变量
+环境变量
+全局变量
+
+定义在shell中的变量称为shell的局部变量
+可用 export var 定义全局的变量，在父进程中也可以使用
+
+shell中的特殊变量
+$0 当前脚本的文件名
+$1..n 给脚本的参数，$1是第一个参数，$2是第一个参数
+$# 参数的个数
+$? 命令的退出状态
+$$ 当前shell的进程ID
+
+命令行参数
+#!/bin/bash
+
+echo "file name $0"
+
+echo "fisrt Para is $1"
+
+echo "second Para is $2"
+
+. test.sh argu1 argu2
+
+转义字符：
+\\ \
+\a 报警
+\b 删除键
+\f 换页
+\n 换行
+\r 回车
+\t tab键
+注意 echo 的命令中-E选项禁止转义
+
+算术运算符
++,-,*,/,=,!=,==(比较两个数字)
+
+例：
+#! /bin/bash
+a=10
+b=20
+var=`expr $a + $b`
+echo "a+b:$var"
+var=`expr $a - $b`
+echo "a-b:$var"
+if[ %a == %b ]
+then
+echo "a is equal to b"
+fi
+if [ %a != %b ]
+then
+echo "a is not equal to b"
+fi
+
+关系运算符：(只支持数字，不支持字符串，除非字符串本身就是数字)
+-eq -ne -gt -lt -gt -le
+
+#!/bin/bash
+a=10
+b=20
+if [ $a -eq $b ]
+then
+echo "$a -eq $b : is equal to b"
+else
+echo "$a -eq $b : is not equal to b"
+fi
+
+注意if后面有空格，[] 的表达式前后有空格
+
+逻辑运算符
+-o -a ! 或与非
+
+字符串运算符：
+s1=www
+s2=eee
+=   [ $s1 = $s2 ] 返回false
+!=  [ $s1 != $s2 ] 返回true
+-z(ero) 检查字符串的长度是否为0 为0则返回true, 否则返回false [ -z $s1 ] 返回false
+-n 检查字符串的长度是否为0 不为0则返回true, 否则返回false [ -z $s1 ] 返回true
+
+权限检测逻辑运算：
+
+-b 检查文件是否是块的设备文件 [ -b $file ]
+-d 检查是不是目录
+-f 检查是不是文件
+-r 文件是否可读
+-w 文件是否可写
+-x 是否可执行
+-e 是否存在
+-s 文件是否为空
+
+shell的字符串
+1. "" ---可带入变量
+2. '' ---原样输出
+3. `` ---执行命令，和$() 一样表示命令的执行
+
+shell数组
+定义：
+arv_name=(v0 v1 v2 v3) 注意元素是空格分开的，python的元组是用','隔开的
+
+数组用index赋值
+arv_name[0]=v0 
+
+长度的获取：
+len=${#arv_name[@]}
+数组内容的获取：${arv_name[@]} 或者 ${arv_name[*]}
+
+格式化的输出语句：
+printf 注意printf不加括号
+printf format-string [arguments] arguments使用空格分隔，不用逗号
+printf '%d%s\n' 1 "abc"
+1abc
+
+printf %s abc
+abc
+
+printf "%s\n" abc edc
+
+case:
+#! /bin/bash
+echo "please input num"
+read a
+case $a in
+1)
+echo "you selected 1"
+;;
+2)
+echo "you selected 2"
+;;
+3)
+echo "you selected 3"
+;;
+*)
+echo "1--3"
+esac
+
+for循环
+for var in 集合
+do
+ echo $var
+done
+
+while
+do
+done
+
+
+重定向：
+command > file 将输出重定向到file中
+command >> file 将输出重定向追加到file中
+command < file 输入重定向
+
+如果希望stdout(1)和stderr(2)可以这样
+command > /dev/null 2>&1
+
+shell 中文件的包含
+. filename.sh 在文件中引入一个脚本文件
+
+0.写入数据
+1.读取数据
+2.提取数据  /usr/bin/mysqldump
+3.将数据压缩
+4.将数据分类存储
+
+数据库的备份：
+
+#!/bin/bash
+
+# Database info
+DB_USER="batsing"
+DB_PASS="batsingpw"
+DB_HOST="localhost"
+DB_NAME="timepusher"
+
+# Others vars
+BIN_DIR="/usr/bin"            #the mysql bin path
+BCK_DIR="/mnt/mysqlBackup"    #the backup file directory
+DATE=`date +%F`  # 时间格式 ，可以用date --help查看
+export DATE  # 设置全局变量 
+
+# TODO
+# /usr/bin/mysqldump --opt -ubatsing -pbatsingpw -hlocalhost timepusher > /mnt/mysqlBackup/db_`date +%F`.sql
+$BIN_DIR/mysqldump --opt -u$DB_USER -p$DB_PASS -h$DB_HOST $DB_NAME > $BCK_DIR/db_$DATE.sql
+
+$BIN_DIR/mysqldump --opt -u$DB_USER -p$DB_PASS -h$DB_HOST $DB_NAME ｜ gzip > $BCK_DIR/db_$DATE.sql.gz
+
+用gzip -d /usr/db_data/db_$DATE.sql.gz 解压文件
+
+用mysql -uroot -p123456 test</usr/db_data/db_$DATE.sql 还原文件
+
+
+
+1、查看CPU信息：
+
+# 查看物理CPU个数
+cat /proc/cpuinfo| grep "physical id"| sort| uniq| wc -l
+
+# 查看每个物理CPU中core的个数(即核数)
+cat /proc/cpuinfo| grep "cpu cores"| uniq
+
+# 查看逻辑CPU的个数
+cat /proc/cpuinfo| grep "processor"| wc -l
+
+# 查看CPU信息（型号）
+cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c
+
+
+
+2、查看内存信息
+
+1）、cat /proc/meminfo
+2）、free 命令
+
+3、查看磁盘信息
+1）fdisk -l
+2）iostat -x 10    查看磁盘IO的性能
+
+
+
+
+

@@ -1,0 +1,27 @@
+创建一个pod(相当于一个逻辑虚拟主机，内部有多个容器，所有容器共享pod的资源。)
+
+kubectl run --image=nginx:1.9.1 nginx-app --port=80  # 创建一个pod，默认创建一个deployment(代替RC，一个service下面是deployment，)
+
+kubectl describe pod nginx-app  # 查看pod的属性
+
+kubectl get deployments  
+kubectl delete deployment nginx-app  先删deployment
+
+kubectl scale --replicas=3 deployment/nginx-app  # 扩容
+
+滚动升级：
+docker pull nginx  # 先拉取一个镜像
+kubectl set image deployment/nginx-app nginx-app=nginx  # 升级
+
+
+service
+
+deployment
+ 
+
+
+
+
+
+
+

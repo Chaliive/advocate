@@ -1,0 +1,95 @@
+1.12
+1.13
+
+在2017年3月1号后版本发生变化
+企业版(EE)和社区版CE:
+社区版分为stable和edge两种发布方式。
+stable版本是季度发布方式，比如17.03, 17.06, 17.09
+edge版本是月份发布方式， 比如17.03, 17.04......
+18.09
+18.09
+18.06
+
+systemctl stop firewalld.service && systemctl disable firewalld.service
+ 
+setenforce 0
+ 
+sed -i.bak 's/SELINUX=enforcing/SELINUX=permissive/' /etc/selinux/config
+
+ 创建一个 vi /etc/yum.repos.d/docker.repo 文件，内容如下：
+[dockerrepo]
+name=Docker Repository
+baseurl=https://yum.dockerproject.org/repo/main/centos/7/
+enabled=1
+gpgcheck=1
+gpgkey=https://yum.dockerproject.org/gpg
+
+
+yum install -y docker-engine
+ 
+	1
+安装完后设置为系统开机自动启动服务
+$ systemctl enable docker.service
+
+docker 命令：
+格式：
+docker [option][command][arguments]
+
+option :
+build 生成一个Images 文件，通过Dockerfile.
+comit 讲现有的容器保存为一个镜像（Images）
+create 创建一个容器
+diff 检测容器系统的变更
+exec 在运行的容器中运行容器的内部命令
+export 将一个容器的文件系统输出为一个压缩包tar包
+images 列出所有的容器镜像列表
+import 从export 的tar 包中导入一个容器
+info 显示系统信息
+inspect 返回容器的底层信息
+kill
+load 从export的tar 包加载容器
+logs 查看容器的日志
+network 查看容器的网络信息
+port 查看容器的暴露到前端（主机服务器）的端口
+ps 列出容器 -a docker ps --help
+pull 拉镜像，从网络中（HUB,分为公有和私有）
+push 推镜像
+rm 删除容器命令 -f
+stop 停止容器
+rmi 删除容器镜像
+save 保存镜像至tar 包中
+search 从互联网中找镜像文件
+start
+tag 给镜像打标记
+top 显示容器的进程
+volume 管理容器的卷
+run 运行容器
+
+
+docker run -v :
+
+将主机中的目录挂载到容器中的目录中，如果容器要访问该目录，实质是直接访问本机的这个目录。
+docker cp 拷贝数据到容器中。
+
+docker sotp 容器id
+
+docker rm -f 容器id
+
+/usr/share/nginx/html
+
+
+
+对镜像的保存和对容器保存的区别
+docker commit 保存为image
+docker export 是对容器的操作==commit +save 命令 保存为文件 tar 包
+docker import 
+
+对image保存为文件 
+docker save
+docker load  是对镜像的操作
+
+docker -P  34644(随机):80随机分配的端口
+docker -p 80:80 指定端口
+docker port 查看映射的端口信息
+
+docker inspect 容器id 或容器名字 进行查看容器的信息

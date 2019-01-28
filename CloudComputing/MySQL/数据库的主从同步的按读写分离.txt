@@ -1,0 +1,52 @@
+智联招聘首页
+配置主数据库：
+一、在[mysqld]标签下面增加以下代码：
+vi /etc/my.cnf
+server-id=1   #主数据库的id
+log-bin=master-bin   #日志路径，作用是从数据库是根据这个日志来复制主数据库的数据的
+
+二、开启mariadb:
+systemctl start mariadb
+
+三、设置远程访问权限：
+grant all privileges on *.*(所有数据库和表) to root @'%'(能远程访问) identified by 'password';(密码)
+
+四、重启服务：
+systemctl restart mariadb
+
+
+配置从数据库：
+一、在[mysqld]标签下面增加以下代码：
+server-id=2   #这个id必须不能和主数据库相同
+read-only=on  #设置该数据库是只读状态
+relay-log=relay-bin  #日志
+
+二、重启mariadb：
+systemctl restart mariadb
+
+
+
+以上都配置好之后：
+一、进入主数据库：
+SHOW MASTER STATUS;
+查看File和Position
+
+二、进入从服务器的数据库:master_host需要改为自己的服务器地址，master_user改为自己用户，master_password改为主数据库的密码，master_log_file改为一中的File，master_log_pos改为一中的Position
+change master to master_host='127.0.0.1',master_user='root',master_password='', master_log_file='master-bin.000005',master_log_pos=882;
+
+
+三、在从数据库中：
+START SLAVE;
+
+四、在从数据库上查看slave同步的状态
+show slave status\G
+
+五、最后在查看Slave_IO_Running和Slave_SQL_Running是否都为yes（一定要全部为yes。否则就是你配置错了，再重新配置一遍从数据库）
+
+
+
+
+
+
+
+

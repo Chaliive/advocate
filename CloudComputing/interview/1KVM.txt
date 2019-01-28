@@ -1,0 +1,20 @@
+KVM：一个实现虚拟化的工具，基于内核的虚拟化工具，他的前身是qemu，他只用于实现虚拟内存和CPU，利用qemu实现IO虚拟化。这样就使得Linux变成了一个Hypervisor
+
+KVM的主要组件有三个：
+qume-kvm：主要的kvm程序包
+libvirt：对虚拟机的管理包，可以用python或其他语言调用
+其他工具如：virt-manager GUI虚拟机管理工具，virt-install基于libvirt服务的虚拟机创建命令。
+
+
+
+
+
+
+
+
+
+
+
+
+
+

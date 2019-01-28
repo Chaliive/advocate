@@ -1,0 +1,7 @@
+1.使用iptable：
+先用docker inspection [container_name] grep IPAddress
+再用iptable转发端口（将容器的端口8000映射到主机的8001）：
+iptables -t nat -A DOCKER -p tcp -dport 8001 -j DNAT --to-destination 192.168.1.1:8080
+iptables -t nat -A  DOCKER -p tcp --dport 8001 -j DNAT --to-destination 172.17.0.19:8000
+
+

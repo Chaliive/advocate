@@ -1,0 +1,323 @@
+
+pwd -P 返回链接的真实路径
+
+ls -a 
+ls -l
+ls -ld /root 查看当前目录的自身信息
+ls -lh 个性显示信息
+ls -lc 查看文件的属性变更时间
+ls -lu 最后访问时间
+ls -lt 安装修改时间排序
+
+touch hello.txt 创建文件，，如果文件存在，更新文件的时间，为当前时间。
+
+mkdir  创建多级目录
+mkdir -p /tmp/test/joer/book/computer
+
+cp 复制文件及目录
+cp 源文件 目标文件
+
+cp -r 递归 复制子文件及子目录
+cp -r 源文件 目标文件
+
+
+rm 删除文件或目录
+rm -f 强制删除
+ -r 删除所有的内容
+
+mv 移动（重命名）文件或目录
+mv hello.txt hello.doc
+mv hello.txt /temp/
+
+find
+搜索文件及目录
+find -name 按名称查找
+-iname 不区分大小写
+-mtime 按修改时间查找
+-size 按容量大小查找
+-type 按类型查找 文件（f）,目录（d）
+设备（b,c）,链接（l）
+-user 用户查找
+-exec 查找过程中执行的命令
+-a 并且
+-o 或
+
+find / -size +10M -a type f 
+find / -size +10M -exec ls -l {} \;
+
+题目：
+查找所有3天内被修改过的文件
+find / -mtime +10 十天前所有，但不包括第十天的文件
+find / -mtime -3  三天内的所有文件，但不包括第三天的文件
+find / -mtime 5  五天前，当天一天的文件
+查找/root 目录下所有.txt结尾的文件
+find /root -name "*.txt"
+
+du 显示文件或目录所占用的磁盘空间。
+du -sh /root 
+查看/root 所占磁盘空间
+
+tail 查看文件尾部内容 ，默认显示末10行
+ -n 显示文件末尾的n行
+ -f 动态显示文件内容
+
+head 查看文件头部的内容 默认10行
+-n 
+
+tail -f /var/log/messages
+
+grep 
+查找关键字并打印匹配的行
+
+grep th hello.txt
+-i 忽略大小写
+-v 取反
+-w 匹配单词
+grep -v 222 hello.txt 
+
+tar :
+打包与解包文件
+模式命令
+-c 创建打包文件
+-r 追加至打包文件中
+-t 列出打包文件的内容
+-x 解包文件
+--delete 从打包文件中删除文件
+
+选项：
+-C 指定解压的路径
+-f 指定打包后的文件名称
+-j 通过bzip2格式压缩
+-z 通过gzip 格式压缩
+将/etc/目录打包并保存为etc.tar 文件
+
+tar -cf etc.tar /etc/
+
+将、boot目录打包并压缩为boot.tar.gz
+tar -czf boot.tar.gz /boot/
+
+追加文件至已经打包好的文件中
+tar -f etc.tar -r /root/hello.txt
+
+tar -xzf boot.tar.gz -C /tmp 指定到解压路径/tmp 
+
+--delete
+tar --delete etc/hosts -f etc.tar 
+从打包文档中删除该文件
+
+查找命令的存储位置
+which 
+which find
+
+
+df 显示磁盘空间的使用信息
+-i 显示inode 使用信息
+-T 显示文件系统类型
+
+netstat 命令
+显示网络的连接、协议，端口等统计信息
+-s 显示各种协议的统计信息
+-n 以数字的形式显示 IP,端口 等 信息
+-l 仅显示正在监听的接口信息
+-u 查看udp 的连接信息
+-t 查看tcp 的连接信息
+
+netstat -nutlp
+
+
+route add 目标网络 gw 网关地址
+
+route add -net 172.16.0.0/16 gw 192.168.186.2 dev eth0
+
+通过网卡eth0,访问172.16 这个网段，数据包都传送到网关
+192.168.186.2 上去。
+
+
+
+
+
+
+
+
+
+清屏命令
+clear 或 Ctrl+l
+
+--------基础命令  熟练-----------------------------------
+
+
+vi 编辑器：
+dd 删除
+ndd 删掉n行 ，5dd ,删除5行
+yy 复制当前行
+p 黏贴至当前行之后
+P 黏贴至当前行之前
+G 跳到最后一行
+o 在最后一行下面插入
+
+--------用户和权限管理----
+
+useradd
+-g 设置所属组
+-u 指定用户的UID
+-d 设置账户默认的home 目录，默认是/home/用户名
+-s 设置账户登录使用的shell ，默认是bash
+-e 设置账户的实效日期默认格式是YYYY-MM-DD
+-c 设置账户的描述信息，账户全称
+
+题目
+创建系统账户 admin ,全称 adminstratro ,默认目录是home/admin ,实效日期2018-12-15，所属root 组
+
+useradd -c adminstrator -d /home/admin -e 2018-12-15 -g root admin
+
+修改用户信息
+
+usermod
+
+-d 修改账户home目录
+-e
+-g
+-s
+-u
+-G
+
+usermod -d /home/tomcat admin
+
+删除用户及相关文件
+userdel 
+-r 删除账户及相关文件
+
+groupdel 
+删除组账户
+
+groupadd 
+-g 设置组ID 号
+
+显示账户及组信息
+id
+
+更新账户信息
+passwd
+
+gpasswd 给组设置密码 
+-A 设置组的管理员
+
+上午的作业：
+
+有一个公司有财务部门--fin,市场部门--market,有行政部门--admin,创建各个部门的管理员账户，并创建所属的员工账户。
+思路：
+1 建组 3个组
+2 建3管理员
+3 建3个用户，分配在3个组下。
+管理员财务部门的caiwu 目录是可读，写，执行
+用户对财务部门的caiwu 目录只读
+管理员市场部门的shichang 目录是可读，写，执行
+用户对市场部门的shichang目录只读
+管理员行政部门的xingzhen 目录是可读，写，执行
+用户对行政部门的xingzhen目录只读
+
+1
+chown maket.op_maket /var/shichang
+
+
+chmod 7(所有者)44 /var/{shichang.xingzhen,caiwu}
+
+
+
+
+
+
+chmod -R 递归将权限应用于所有子目录及文件
+u 所有者，g所属组 o 其他用户 a 代表所有人
+chmod u=rwx,g=rwx,o=rwx hello.txt
+r=4
+w=2
+x=1
+chmod 777 hello.txt
+chmod 644 hello.txt
+
+
+
+ACL
+
+setfacl 
+-m 添加条目
+-x 删除指定的ACL 条目
+-R 递归处理所有子文件及目录
+-b 删除所有附加的ACL 条目
+
+setfacl -m u:user1:rw hello.txt
+
+setfacl -x g:market_g hello.txt
+
+setfacl -x u:user1 hello.txt
+setfacl -b hello.txt
+getfacl 文件名称
+
+grep 的常用用法
+grep 参数
+-a 将二进制的文件以文本文件的形式进行搜索
+-c 计算搜索到的字符串的次数
+-i 忽略大小写
+-n 输出行号
+-v 反向选择
+
+将/etc/passwd，有出现 root 的行取出来（两种方法实现）
+1 grep root /etc/passwd
+2 cat /etc/passwd |grep root
+
+将/etc/passwd，有出现 root 的行取出来,同时显示这些行在/etc/passwd的行号
+
+grep -n root /etc/passwd
+
+将/etc/passwd，将没有出现 root 的行取出来
+grep -v root /etc/passwd
+
+将/etc/passwd，将没有出现 root 和nologin的行取出来
+grep -v root /etc/passwd | grep -v nologin
+
+将/etc/passwd,我想要搜寻 test 或 taste 这两个单字时
+
+grep -n 't[ae]st' test.txt
+这个表[]里面无论有多少字符，都仅代表一个字符
+
+将/test.txt, 要搜寻有oo的字符，但是oo前面不能g
+grep -n '[^g]oo' test.txt
+
+将/test.txt, 我不想要开头是英文字母行。
+
+grep -n ‘^[^a-zA-Z]' test.txt
+
+如果我想要让 the 只在行首
+^ 行首
+$ 行尾
+
+grep -n '^the' test.txt
+
+请找出test.txt 文件中的空白行
+
+grep -n ‘^$’ test.txt
+. 代表的任意一个字符
+* 重复前一个字符
+
+gXXd 这样的字符
+g.*d
+
+题目：
+假设我们要找出 g 后面接 2 到 5 个 o ，然后再接一个 g 的字串，
+
+goog
+gooog
+goooog
+goooog
+
+方法：
+grep -v 'gooooooo*g' 1.txt |grep -n 'gooo*g'
+ 
+标准方法：
+grep -n 'go\{2,5\}g' 1.txt
+grep -nE 'go{2,5}g' 1.txt
+egrep -n 'go{2,5}g' 1.txt
+
+
+

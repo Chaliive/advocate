@@ -1,0 +1,36 @@
+ansible：是自动化运维工具，基于Python开发，实现批量系统设置、批量程序部署、批量执行命令等功能。无需在被管理节点上安装附加软件
+
+
+ansible的基本架构：
+1.ansible自带的模块：core modules
+2.扩展模块：如果核心模块不足以完成某种功能，可以添加扩展模块
+3.插件：完成模块功能的补充，比如发送mail，log等
+4.剧本：ansible的任务配置文件，将多个任务定义在剧本中，由ansible自动执行
+5.连接插件：一般用ssh连接其它主机，当然还支持其它方法
+6.主机群：定义ansible管理的主机
+
+
+工作原理：
+
+1.首先，node management通过ssh等连接工具连接到各个node
+2.然后，可以通过应用分类对主机群分类，管理节点通过各类模块实现相应的操作
+3.管理节点可以通过剧本实现多个任务的集合实现一类功能，如web服务的安装部署、数据库服务器的批量备份等
+
+
+主要命令：
+ansible、ansible-doc、ansible-galaxy、ansible-lint、ansible-playbook、ansible-pull、ansible-vault 
+
+ansible          |   是指令核心部分，其主要用于执行ad-hoc命令，即单条命令
+ansible-doc      |   该指令用于查看模块信息，常用参数有两个-l 和 -s
+ansible-galaxy   |   用于下载的命令，类似yum，pip
+ansible-lint     |   是对playbook的语法进行检查的一个工具。用法是ansible-lint playbook.yml
+ansible-playbook |   该指令是使用最多的指令，其通过读取playbook 文件后，执行相应的动作
+ansible-vault    |   主要应用于配置文件中含有敏感信息，又不希望他能被人看到，vault可以帮你加密/解密这个配置文件
+ansible-pull     |   pull 模式
+
+
+
+
+
+
+

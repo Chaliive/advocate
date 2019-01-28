@@ -1,0 +1,111 @@
+一份标准的配置文件由version、service、networks三部分组成，其中最关键的是service和networks。
+以下以下介绍service的书写规则：
+一、images
+services:
+  db:
+    image: "mysql:5.7.15"
+db是用户给当前这个服务自定义的名字。
+image是指定服务的镜像名称或者镜像ID
+
+二、build
+services除了可以基于指定的image，还可以基于一份Dockerfile，在docker-compose up启动时执行构建。
+services:
+  nginx:
+    build: /path/nginx
+
+build就是用来指定Dockerfile所在的文件路径，这里的路径可以是绝对路径也可以是相对路径。
+
+
+三、command
+使用command可以覆盖容器启动后默认执行的命令。
+如：
+command:  bundle exec thin -p 3000   或
+command：[bundle,exec,thin,-p,3000]
+
+四、container_name
+container_name: app #指定容器名称
+
+五、expose
+用于暴露接口
+expose:
+  - "3500"
+  - "5000"
+
+六、ports
+映射端口
+ports:  - "3000" - "8000:8000"
+  - "49100:22"
+  - "127.0.0.1:8001:8001"
+
+当使用HOST:CONTAINER格式来映射端口时，如果你使用的容器端口小于60你可能会得到错误得结果，因为YAML将会解析xx:yy这种数字格式为60进制。
+
+建议采用字符串格式
+
+volumes:  # 指定一个文件目录，用来存放容器数据。
+  # $PWD 表示当前路径
+  - $PWD/data:/var/lib/mysql
+
+
+version: '2'
+  ghost:  # 指定网络模式networks:
+  ghost-app:    # 配置服务services:
+    build: ghost    # 使用当前路径下ghost中的Dockerfile构建容器
+    networks:
+      - ghost
+    depends_on:    # 指定当前服务依赖服务
+      - db
+    ports:    # 端口映射
+      - "2368:2368"
+
+  nginx:
+    build: nginx
+    networks:
+      - ghost
+    depends_on:
+      - ghost-app
+    ports:
+      - "80:80"
+ 
+  db:
+    image: "mysql:5.7.15"
+    networks:
+      - ghost
+    environment:    # 配置环境变量
+      MYSQL_ROOT_PASSWORD: mysqlroot
+      MYSQL_USER: ghost
+      MYSQL_PASSWORD: ghost
+    volumes:
+      - $PWD/data:/var/lib/mysql      # 设置数据路径，容器销毁任然有效
+    ports:
+      - "3306:3306"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

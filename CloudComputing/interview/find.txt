@@ -1,0 +1,57 @@
+find语法:
+find   path   -option   [   -print ]   [ -exec   -ok   command ]   {} \;
+
+1.将目前目录及其子目录下所有延伸档名是 c 的文件列出来。
+# find . -name "*.c"
+
+2.将目前目录及其下子目录中所有一般文件列出
+# find . -type f
+
+3.将目前目录及其子目录下所有最近 20 天内更新过的文件列出
+# find . -ctime -20
+
+4.查找/var/log目录中更改时间在7日以前的普通文件，并在删除之前询问它们：
+# find /var/log -type f -mtime +7 -ok rm {} \;
+
+5.为了查找系统中所有文件长度为0的普通文件，并列出它们的完整路径：
+# find / -type f -size 0 -exec ls -l {} \;
+
+-amin n 在过去n分钟内被读取过
+-atime n 在过去n天内被读取过
+-cmin n 在过去n分钟内被修改过
+-ctime n 在过去n天内被修改过
+-size n 文件大小是n单位，b代表
+-type c 文件类型是c的文件
+-iname f 根据文件名查找，不区分大小写
+”[]”表示通配括号里面的任意一个字符，注意[]里面的内容会被解析成单个字符。
+d: 目录
+f: 一般文件
+
+
+sed语法：
+sed [-hnV] [-e<script>] [-f<script文件>] [文本文件]
+
+sed -n -e '/root/{s/nologin/login4/gp}' /etc/passwd
+
+sed -e 4a\newline testfile  #使用sed 在第四行后添加新字符串 
+
+nl /etc/passwd | sed '2,5d' #将 /etc/passwd 的内容列出并且列印行号，同时，请将第 2~5 行删除！
+
+nl /etc/passwd | sed '3,$d' #要删除第 3 到最后一行
+
+nl /etc/passwd | sed -n '5,7p' #列出 /etc/passwd 文件内的第 5-7 行
+
+nl /etc/passwd | sed  '/root/d' #删除/etc/passwd所有包含root的行，其他行输出
+
+nl /etc/passwd | sed -n '/root/{s/bash/blueshell/;p;q}' #搜索/etc/passwd,找到root对应的行，执行后面花括号中的一组命令，每个命令之间用分号分隔，这里把bash替换为blueshell，再输出这行
+
+nl /etc/passwd | sed -e '3,$d' -e 's/bash/blueshell/' #一条sed命令，删除/etc/passwd第三行到末尾的数据，并把bash替换为blueshell
+
+用$表示最后一行
+
+sed -n '/^root/p' /etc/passwd 查看以root开始的行
+
+sed -n '/root$/p' /etc/passwd 查看以root结尾的行
+
+
+

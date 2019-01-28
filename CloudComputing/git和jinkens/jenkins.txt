@@ -1,0 +1,49 @@
+jenkins可以帮你构建一个自动化的持续集成环境，可以使用它来自动化编译、打包、分发部署应用，它兼容ant、maven、gradle
+
+jenkins实现ci docker实cd
+
+DevOps = CI + CD
+
+开发人员  | 运维人员
+开发、测试、部署、运维
+
+git 触发 jenkins
+jenkins 触发 git
+jenkins拉代码，生成镜像
+
+
+将jenkins与github关联，
+
+用jenkins进行docker操作
+
+
+
+一、通过jenkins拿下代码  git pull http://..
+二、删除k8s另外创建k8s
+
+
+
+Dockerfile:
+FROM images
+COPY *.py path
+docker build -t my:3
+
+
+
+3bb3a09dc8581e0180921f323c8b310954fec38d
+
+
+
+
+开发人员通过git提交代码到github上，jenkins对hithub进行实时监控，如果有新的代码提交，我们通过ssh远程连接自己的主机，用定时任务执行自己写的脚本，jenkins把代码拉下来，然后对自己的镜像通过对Dockerfile文件 进行制件新的镜像，然后上传私有镜像库或公有镜像库，方便自己和他人的使用。
+
+
+
+ci持续集成，cd持续部署
+
+
+
+
+
+
+

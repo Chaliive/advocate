@@ -1,0 +1,24 @@
+systemctl stop firewalld.service && systemctl disable firewalld.service
+ 
+setenforce 0
+ 
+sed -i.bak 's/SELINUX=enforcing/SELINUX=permissive/' /etc/selinux/config
+
+ 创建一个 vi /etc/yum.repos.d/docker.repo 文件，内容如下：
+[dockerrepo]
+name=Docker Repository
+baseurl=https://yum.dockerproject.org/repo/main/centos/7/
+enabled=1
+gpgcheck=1
+gpgkey=https://yum.dockerproject.org/gpg
+ 
+?	安装新版本 Docker
+yum install -y docker-engine
+
+
+
+docker pull nginx
+
+docker pull python:3.6
+
+

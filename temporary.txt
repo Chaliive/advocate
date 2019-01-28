@@ -1,0 +1,107 @@
+报警模板被移动到了应用组下，即只有选择资源范围为应用分组才能使用报警模板
+InternetOutRate_Percent  (ECS) 经典网络-公网流出带宽使用率 >90% Warn 连续3次就报警
+
+
+已用连接数，写入网络带宽，读取网络带宽，操作失败数，CPU使用率，内存使用率，内存使用量，已用连接数百分比，写入带宽使用率，读取带宽使用率，已用QPS数量
+
+
+磁盘使用率，IOPS使用率，连接数使用率，CPU使用率，内存使用率，MySQL网络流入流量，MySQL网络出流量
+
+
+报警使用的指标：
+IOPS使用率，连接数使用率，CPU使用率，磁盘使用率
+对云数据库RDS版
+云监控会默认为每个主实例和只读实例创建报警规则。内容分别是 CPU 使用率>80%，连接数使用率>80%，IOPS 使用率>80%，磁盘使用率 >80%。超过阈值时会短信和邮件通知云账号联系人。
+
+
+rm-uf62dtbdjn5j177fq2o.mysql.rds.aliyuncs.com
+
+报警模板被移动到了应用组下，即只有选择资源范围为应用分组才能使用报警模板，已用连接数，定入网络带宽，读取网络带宽，操作失败数，CPU使用率，内存使用率，内存使用量，已用连接数百分比，写入带宽使用率，读取带宽使用率，已用QPS数量 
+磁盘使用量，IOPS使用量，连接数使用率，CPU使用率，内存使用率，MySQL网络入流量，MySQL网络出流量
+报警使用的指标，IOPS使用率，连接数使用率，CPU使用率，磁盘使用率
+云监控会默认为每个主实例和只读实例创建报警规则。内容分别是CPU使用率>80%。超过阈值会我短信和邮件通知云账号联系人
+
+'--storage_driver=influxdb' '--storage_driver_db=cadvisor' '--storage_driver_host=influxdb:8086'
+
+i-uf6f9m2ds3r55zpb94bu    iZuf6f9m2ds3r55zpb94buZ
+i-uf6f9m2ds3r55zpb94bt
+
+lb-uf6ji6swl85o5b6fk2i24
+
+
+slave1
+13.09  出1.3  入0.25
+13.27  出1.08入0.05
+
+29号18：00到了3400  80端口
+1号16：00到了2500  80端口
+25号17：30到了1800  5000端口
+29号18：00到了1600  5000端口
+
+在200上部署好了grafana、influxdb和cadvisor，然后在201上部署cadvisor，将cadvisor上采集的数据传到200上的influxdb上，再用grafana展示成图表
+
+1.先去200主机上创建一个cadvisor_201的数据库
+2.在201主机上部署cadvisor，并配置
+3.到200的inluxdb上查看cadvisor_201的数据是否传输过来
+
+
+可能是数据库的user和password不对
+可能是引号不对...
+
+
+/sys/fs/cgroup/cpu,cpuacct
+
+/sys/fs/cgroup/cpuacct,cpu
+
+docker run -itd --name cadvisor -p 8082:8080 --mount type=bind,src=/,dst=/rootfs,ro --mount type=bind,src=/var/run,dst=/var/run --mount type=bind,src=/sys,dst=/sys,ro --mount type=bind,src=/var/lib/docker/,dst=/var/lib/docker,ro google/cadvisor -storage_driver=cadvisor -storage_driver_db=cadvisor_201 -storage_driver_user=root -storage_driver_password=root -storage_driver_host=192.168.1.200:8086
+
+
+-storage_driver：需要指定cadvisor的存储驱动这里是influxdb
+-storage_driver_db：需要指定存储的数据库
+-storage_driver_user：influxdb数据库的用户名(测试可以加可以不加)
+-storage_driver_password：influxdb数据库的密码(测试可以加可以不加)
+-storage_driver_host：influxdb数据库的地址和端口
+
+
+OKR
+2个O，4个KR
+
+先要有个概览，通过概览连接到各个其它小图
+概览有主机的cpu，内存，磁盘，网络情况
+！@#￥%……&*（）——+
+!  @#$ % ^  &*  ( ) _      +|
+
+单位的问题：
+IEC：gibibytes,mebibytes,kibibytes         是1024进制Gib，Mib，Kib
+Metric：gigabytes,megabytes,kilobytes  是1000进制Gb，Mb，Kb
+
+
+/dev/vda6:  113229824
+none: 4183625728
+shm: 67108864      hhh
+overlay: 39133294592  36.4G
+tmpfs: 67108864    hhhh
+/dev/vda9: 39133294592
+/dev/mapper/usr: 1031946240
+
+
+查找'FS #'，查看data.usage（第394行）
+
+定义define很重要，一个函数的写法要看定义是怎样的。只有准确的定义才能准确的把函数写出来。
+
+
+/dev/mapper/usr:    1031946240
+/dev/vda6:   113229824
+none:    4183625728
+shm:    67108864
+overlay:    59939479552
+tmpfs:     67108864
+/dev/vda9:  59939479552
+
+https://github.com/aploium/shootback
+
+
+
+
+
+

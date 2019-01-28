@@ -1,0 +1,34 @@
+Apache：
+Apache是世界使用排名第一的Web服务器软件
+
+1.安装httpd
+yum -y install httpd
+2.安装mariadb
+3.在/var/www/html下安装自己的页面就好
+
+
+
+Nginx：
+Nginx是一款轻量级的Web 服务器/反向代理服务器代理服务器
+
+1. 源码安装nginx，需要gcc，gcc-c++，和pcre，zlib库等
+2. ./configure, make, make install
+3. /usr/local/nignx下的html目录下
+
+nginx实现负载均衡的方式：
+通过改写配置文件，将服务的端口加入，通过nginx转发请求实现。
+
+
+Tomcat：
+实际上Tomcat是Apache 服务器的扩展
+源码安装是用java编译的
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,41 @@
+InfluxDB是一个开源的时序数据库，适合用于处理和分析资源监控数据这种时序相关数据。容器资源监控系统中，采用了InfluxDB存储cadvisor的监控导出的数据(类似数据库有Elasticsearch、Graphite等)
+主要功能：
+1.基于时间序列，支持与时间有关的相关函数(如最大，最小，求和等)；
+2.可度量性：你可以实时对大量数据进行计算；
+3.基于事件：它支持任意的事件数据；
+主要特点：
+无结构(无模式)：可以是任意数量的列；
+可拓展的：
+支持min，max，sum，count，mean，median等一系列函数，方便统计；
+强大的类SQL语法；
+自带管理界面，方便使用
+
+
+database相当于mysql中的database
+
+
+measurement相当于mysql中的表，是fields,tags,以及time列的容器
+
+point相当于mysql中的行
+
+
+tag相当于mysql中的索引，只支持字符串类型
+
+
+field相当于mysql中的列，支持多种类型
+
+
+retention policy保存策略，这是influxdb特有的属性，rp指定数据在influxdb中的保存时间，时间已过，influxdb会自动清除数据。
+
+
+continuous queries 特色功能之一，相当于定时任务
+
+tag和field依据具体查询需求来定。
+timestamp(时间戳)
+influxdb中一列名为time的列，存储UTC时间戳
+GROUP BY 参数只能是time和tag)。
+
+
+
+
+

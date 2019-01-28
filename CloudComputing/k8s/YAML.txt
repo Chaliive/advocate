@@ -1,0 +1,73 @@
+YAML:
+一个像XML或Json一样利于读写的一种数据格式，描述数据的一种格式
+
+Yaml的基本规则：
+
+1、大小写敏感
+2、使用缩进表示层级关系
+3、禁止使用TAB缩进，只能是空格
+4、对缩进没有要求，只要对齐就表示一个层级
+5、用#注释
+6、字符串可以不用引号标注
+
+1）.数据类型(对象，MAP)：
+使用···冒号加空格···表示一对键值，同一缩进的所有键值属于同一层级的对象
+
+如：
+
+age:  22
+mane:  zhou
+
+# 相同表示：
+   age:  22
+   mane:  zhou
+
+
+相对Json的表示方法：
+{'age':22,'name':'zhou'}
+
+
+2）.数组
+使用连字符(- )加上空格表示：
+#yaml 的表示：
+-  a
+-  b
+-  12
+
+#对应的Json
+['a','b',12]
+
+对于ansible 每一个yaml文件的开始都要写一个(---),表示文件的开始
+
+
+例如一个职工的信息，要求用yaml表示：
+
+---
+# This is a employer's infomation
+name:  libai
+job:  DevOps
+food:
+ - apple
+ - peanut
+ - orange
+skills:
+   python: excellent
+   c++: good
+   c: just so so
+
+
+K8S+YAML的应用
+
+
+
+
+
+
+
+
+
+
+
+
+
+

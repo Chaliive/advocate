@@ -1,0 +1,53 @@
+1.count()
+SELECT COUNT(<field-key>) FROM <measurement-name> [WHERE <stuff>] [GROUP BY <stuff>]
+返回一个字段中的非空值的数量：计算water_level每4天时间间隔里的数量
+SELECT COUNT(water_level) FROM h2o_feet WHERE time >= '2015-08-18T00:00:00Z' AND time < '2015-09-18T17:00:00Z' GROUP BY time(4d)
+在h2o_feet表中，选择tag_key大于08-18且小于09-18中用时间分组的步长为4d的所有的water-level的数量
+SELECT COUNT(water_level) FROM h2o_feet WHERE location = 'santa_monica' AND time >= '2015-09-18T21:41:00Z' AND time <= '2015-09-18T22:41:00Z' GROUP BY time(30m)
+在h2o_feet表中，选择tag_key为location的tag_value为santa_monica且时间大于9-18-21:41且时间小于9-18-22:41中用时间分组的步长为30m的所有water-level的数量
+SELECT COUNT(water_level) FROM h2o_feet WHERE location = 'santa_monica' AND time >= '2015-09-18T21:41:00Z' AND time <= '2015-09-18T22:41:00Z' GROUP BY time(30m) fill(none)
+在h2o_feet表中，选择tag_key为location的tag_value为santa_monica且时间大于9-18-21:41且时间小于9-18-22:41中用时间分组的步长为30m的所有water-level的数量(未采集到的值用none替代)
+
+2.distinct()
+返回一个字段的唯一值
+SELECT DISTINCT (<field-key>) FROM <measurement-name> [WHERE <stuff>] [GROUP BY <stuff>]
+SELECT DISTINCT("level description") FROM h2o_feet
+从表ho_feet中选字段为level description的值的唯一值
+SELECT DISTINCT("level description") FROM h2o_feet GROUP BY location
+选择唯一的值在leve description 以location 标签分组
+
+3.mean()
+返回一个字段field中的值的算术平均值。字段类型必须是长整型或float64
+SELECT MEAN (<field-key>) FROM <measurement-name> [WHERE <stuff>] [GROUP BY <stuff>]
+
+SELECT MEAN(water_level) FROM h2o_feet
+
+4.MEADIAN()
+从单个字段中的排序值中返回中位数
+SELECT MEDIAN(<field_key>) FROM <measurement_name> [WHERE <stuff>] [GROUP BY <stuff>]
+SELECT MEDIAN(water_level) FROM h2o_feet WHERE time >= '2015-08-18T00:00:00Z' AND time < '2015-08-18T00:36:00Z' GROUP BY location
+
+5.SPREAD()
+返回字段的极差
+SELECT SPREAD(<field_key>) FROM <measurement_name> [WHERE <stuff>] [GROUP BY <stuff>]
+SELECT SPREAD(water_level) FROM h2o_feet WHERE location = 'santa_monica' AND time >= '2015-09-18T17:00:00Z' AND time < '2015-09-18T20:30:00Z' GROUP BY time(30m)
+
+6.SUM()
+返回一个字段中的所有值的和
+SELECT SUM(<field_key>) FROM <measurement_name> [WHERE <stuff>] [GROUP BY <stuff>]
+SELECT SUM(water_level) FROM h2o_feet WHERE time >= '2015-08-18T00:00:00Z' AND time < '2015-09-18T17:00:00Z' GROUP BY time(5d)
+
+7.INTEGRAL()
+返回曲线
+SELECT INTEGRAL( [ * | <field_key> | /<regular_expression>/ ] [ , <unit> ]  ) [INTO_clause] FROM_clause [WHERE_clause] [GROUP_BY_clause] [ORDER_BY_clause] [LIMIT_clause] [OFFSET_clause] [SLIMIT_clause] [SOFFSET_clause]
+
+8.PERCENTILE(N)
+返回百分位数
+
+
+SELECT DERIVATIVE(value,1s) / 1000000000 FROM cpu_usage_total WHERE ... AND now() - 1h
+cpu_usage_total:That's the accumulated CPU usage in nanoseconds. You should be able to convert it to core utilization with a query above.
+
+Note that this won't be normalized by the number of cores, so if you have 4 cores utilized at 100%, then you'll get 4 as a result, and if you have 1 core utilized at 50%,then you'll get 0.5
+
+

@@ -1,0 +1,195 @@
+ls -a 显示所有包括隐藏
+ls -ld path 显示path的详情
+ls -lh 个性化显示
+ls -lc 查看文件的属性变更时间
+ls -lu 最后访问的时间
+ls -lt 安装修改时间排序
+
+mkdir -p path1/path2 创建多级目录
+
+cp -r 源文件 目标文件 递归，复制子文件及子目录
+rm -rf 递归强制删除
+
+条件：
+find -name  按名称 查找文件及目录
+find -iname 不区分大小写
+find -lname 匹配链接文件
+find -regex 匹配正则表达式
+find -mtime 按修改时间查找
+find -amin N 查找N分钟之前或后的被访问过的文件 -n(n分钟内) +n(n分钟前)
+find -atime N 查找N天之前或后的被访问过的文件
+find -cmin N 查找N分钟之前或后的被修改过的文件
+find -ctime N 找N天之前或后的被修改的文件
+find -uid 查找所属用户id的文件
+find -gid 查找所属组id的文件
+find -inum N 查找i-node的文件
+find -perm mode 精准权限查找 如：mode=755
+find -perm -mode 匹配权限至少是mode的文件
+find -size (+/-)N 表示N以上
+find -usr name / -group name
+find -size 按大小查找， +10M：大小10M
+find -type 按类型查找，文件-f，目录-d，设备-b，-c，链接-l
+find -user 按用户查找
+find -exec 查找过程中执行的命令
+find -a 并且
+find -o 或
+
+表达式：
+-depath 查找子目录前先查找当前目录下的文件 
+-mount 查找文件不跨越文件系统
+-maxdepth level 设置最大递归查找的深度
+
+动作表达式：
+-print
+-ls
+-exec command {} \;
+-ok command {} \; 询问用户是否要执行
+
+小测：
+find [<起始目录>][<选项表达式>][<条件匹配表达式>][<动作表达式>]
+递归显示 / 目录的文件列表(仅限于3层目录)  | find / maxdepth 3
+只查找符号链接文件 
+查找/tmp目录下小于10M的文件  | find /tmp -size -10M -type f
+查找在/tmp目录中最后10分钟访问过的文件  | find /tmp -amin -10
+找出/var/log 目录下所有的前5天修改过的.log文件  | find /var/log -ctime -5 -a -name '*.log'
+查找并列出当前目录下不安全的文件(可读写执行)  | find ./ -perm -007
+查找以server 开头的目录名  find / -name 'server*' -type d
+精确查找权限为644的文件或目录 | find 
+
+find / -size +10M -a -type f
+find / -size +10M -exec ls -l {} \;
+find / -mtime -3 
+
+
+
+
+du -sh /root 显示文件或目录的容量
+tail -n 显示文件末尾的n行
+tail -f 动态显示文件的内容
+一般用来查看日志:
+tail -f /var/log/messages
+
+grep 查找关键字并打印匹配的行
+
+grep th file
+grep print file.py 查找file.py下的print并显示所有的行
+
+grep -i 不管大小写 -w 匹配单词 -v 反向匹配，打印不包含关键字的行
+
+tar 打包与解包文件
+-c 创建打包文件
+-r 追加至打包文件中
+-t 列出打包文件的内容
+-x 解包文件
+
+选项：
+-C 指定解压的路径
+-f 指定打包后的名称
+-z 通过gzip格式压缩
+--delete 从打包文件中删除文件
+
+tar -cf etc.tar /etc/  将etc目录打包并保存为etc.tar文件
+将boot目录打包并压缩为boot.tar.gz文件
+tar -cf boot.tar.gz /boot/
+
+tar -czf boot.tar.gz /boot/
+
+追加文件至已经打包好的文件中
+tar -f etc.tar -r /root/file.py
+
+指定到解压路径/tmp
+tar -xzf boot.tar.gz -C /tmp
+
+tar --delete etc/hosts -f etc.tar 从打包文件中删除etc/hosts 
+
+当我们不知道路径是可以用which命令
+
+which 查找命令的存储位置
+
+
+-----用户和权限管理------
+useradd 添加用户
+-g 设置所属组
+-u 指定用户的uid
+-d 设置用户默认的home目录
+-s 设置用户登录使用的shell，默认bash
+-e 设置账户的失效上期，默认格式YYYY-MM-DD
+-c 设置账户的描述信息，默认全称
+
+
+usermod 修改用户信息
+-d 设置用户默认的home目录
+-s 设置用户登录使用的shell，默认bash
+-e 设置账户的失效上期，默认格式YYYY-MM-DD
+-c 设置账户的描述信息，默认全称
+-G 修改附加组
+
+
+userdel 删除用户
+-r 删除账户及相关文件
+
+groupadd -g 设置组ID号
+groupdel 删除账户
+
+显示账号及组信息
+id username
+
+gpasswd 给组设置密码
+-A 设置组的管理员
+gpasswd market -A market
+
+
+chmod -R 修改文件权限，递归将权限应用于所有子目录及文件
+
+
+passwd username --stdin
+
+
+grep 
+-a 将二进制的文件以文本文件的形式进行搜索
+-c 计算搜索到的字符串的次数
+-i 忽略大小写
+-n 输出行号
+-v 反选
+
+cat /etc/passwd |grep root
+grep root /etc/passwd 
+
+grep -n 't[ae]st' test.txt 无论[]内有多少字符都只取一个
+grep -n '[^g]oo' test.txt  表示oo前面不能为'g'
+grep -n '^[^a-zA-Z]' test.txt 首字符不能以字母开始
+grep -n '^the' test.txt 只想让the开始
+
+^a 以a开始  b$ 以b结束
+. 代表前一个字符
+* 代表重复前一个字符，0个，1个或多个
+
+查找2个到5个字母o的文件
+grep -n 'go\{2,5\}g' test.txt 
+grep -nE 'go{2,5}g' test.txt 
+egrep -n 'go{2,5}g' test.txt 
+
+
+df 显示磁盘空间的使用信息
+-i 显示inode使用信息
+-T 显示文件系统类型
+
+
+netstat 显示网络的连接、协议、端口号等统计信息
+-s 显示各种协议的统计信息
+-n 以数字的形式显示IP，端口等信息
+-l 仅显示正在监听 的接口信息
+-u 查看udp的连接信息
+-t 查看tcp的连接信息
+
+
+route add  目标网络 gw 网关地址
+
+route add -net 192.16.0.0/16 gw 192.168.186.2 dev eth0
+
+通过网卡eth0 192.16 这个网段的信息都要通过192.168.186.2这个网关
+
+
+
+
+

@@ -1,0 +1,27 @@
+1.在github上新建新的仓库repo
+2.在本地新建一个文件夹存放仓库localRepo
+3.在本地仓库Git Bush Here，执行git init命令
+4.配置ssh-key
+ssh-keygen -t rsa -C "zhoucy567@qq.com"
+5.将生成的id_rsa.pub的文件内容复制到github的SSH and GPG keys
+6.验证是否成功：ssh -T git@github.com
+7.本地仓库上传到github上
+git config --global user.name "Chaliive"
+git config --global user.email "zhoucy567@qq.com"
+8.git remote add origin git@github.com:yourName/yourRepo.git
+9.git commit -m "message"
+10.git push origin master
+
+11.如果出现错误
+failed to push some refs to 'git@github.com:yourName/yourRepo.git'
+
+则：git pull --rebase origin master
+
+然后再执行语句：
+git push -u origin master
+OK!!
+
+12如果出现错误
+fatal: remote origin already exists.
+则：git remote rm origin
+

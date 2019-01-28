@@ -1,0 +1,437 @@
+1.12
+1.13
+
+在2017年3月1号后版本发生变化
+企业版(EE)和社区版CE:
+社区版分为stable和edge两种发布方式。
+stable版本是季度发布方式，比如17.03, 17.06, 17.09
+edge版本是月份发布方式， 比如17.03, 17.04......
+18.09
+18.09
+18.06
+
+systemctl stop firewalld.service && systemctl disable firewalld.service
+ 
+setenforce 0
+ 
+sed -i.bak 's/SELINUX=enforcing/SELINUX=permissive/' /etc/selinux/config
+
+ 创建一个 vi /etc/yum.repos.d/docker.repo 文件，内容如下：
+[dockerrepo]
+name=Docker Repository
+baseurl=https://yum.dockerproject.org/repo/main/centos/7/
+enabled=1
+gpgcheck=1
+gpgkey=https://yum.dockerproject.org/gpg
+
+
+yum install -y docker-engine
+ 
+	1
+安装完后设置为系统开机自动启动服务
+$ systemctl enable docker.service
+
+docker 命令：
+格式：
+docker [option][command][arguments]
+
+option :
+build 生成一个Images 文件，通过Dockerfile.
+comit 讲现有的容器保存为一个镜像（Images）
+create 创建一个容器
+diff 检测容器系统的变更
+exec 在运行的容器中运行容器的内部命令
+export 将一个容器的文件系统输出为一个压缩包tar包
+images 列出所有的容器镜像列表
+import 从export 的tar 包中导入一个容器
+info 显示系统信息
+inspect 返回容器的底层信息
+kill
+load 从export的tar 包加载容器
+logs 查看容器的日志
+network 查看容器的网络信息
+port 查看容器的暴露到前端（主机服务器）的端口
+ps 列出容器 -a docker ps --help
+pull 拉镜像，从网络中（HUB,分为公有和私有）
+push 推镜像
+rm 删除容器命令 -f
+stop 停止容器
+rmi 删除容器镜像
+save 保存镜像至tar 包中
+search 从互联网中找镜像文件
+start
+tag 给镜像打标记
+top 显示容器的进程
+volume 管理容器的卷
+run 运行容器
+
+
+docker run -v :
+
+将主机中的目录挂载到容器中的目录中，如果容器要访问该目录，实质是直接访问本机的这个目录。
+docker cp 拷贝数据到容器中。
+
+docker sotp 容器id
+
+docker rm -f 容器id
+
+/usr/share/nginx/html
+
+
+
+对镜像的保存和对容器保存的区别
+docker commit 保存为image
+docker export 是对容器的操作==commit +save 命令 保存为文件 tar 包
+docker import 
+
+对image保存为文件 
+docker save
+docker load  是对镜像的操作
+
+docker -P  34644(随机):80随机分配的端口
+docker -p 80:80 指定端口
+docker port 查看映射的端口信息
+
+docker inspect 容器id 或容器名字 进行查看容器的信息
+docker --help
+
+
+mysql实验步骤： 目的是否存入容器中的MySQL数据，存入在本地，在本地可见
+
+1、docker pull mysql:5.6
+2、mkdir -p /mysql/data /mysql/logs /mysql/conf
+data目录将映射为mysql容器配置的数据文件存放路径
+
+logs目录将映射为mysql容器的日志目录
+
+conf目录里的配置文件将映射为mysql容器的配置文件
+
+3、docker run -p 3306:3306 --name mymysql -v /mysql/conf:/etc/mysql/conf.d -v /mysql/logs:/logs -v /mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -d mysql:5.6
+
+docker ps 
+
+
+
+创建本地文件夹
+mkdir -p /mysql/data /mysql/logs /mysql/conf
+开启mysql3容器
+docker run -p 3306:3306 --name mysql3 -v /mysql/conf:/etc/mysql/conf.d -v /mysql/logs:/logs -v /mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -d mysql:5.6
+docker ps
+
+查看本地文件下数据是否同步
+cat /mysql/data/
+ 
+进入到容器当中
+docker exec -it mysql3 /bin/sh
+查看容器中文件是否和本地文件内容一致
+cd /var/lib/mysql
+(注意远程数据库只有在容器处于开启状态时才能够连接，IP是物理机IP，密码123456）
+
+尝试销毁mysql3容器查看本地数据库文件
+docker stop mysql3
+docker rm  mysql3
+cat /mysql/data/
+docker ps
+
+实验2：搭建java 的镜像文件
+
+1、wget http://download.oracle.com/otn-pub/java/jdk/8u191-b12/2787e4a523244c269598db4e85c51e0c/jdk-8u191-linux-x64.tar.gz
+
+
+2、创建Dockerfile
+FROM centos:latest
+MAINTAINER  Wanglei
+ADD jdk-8u191-linux-x64.tar.gz /opt
+RUN ln -s /opt/jdk1.8.0_191 /opt/jdk
+CMD /opt/jdk/bin/java -version
+
+ENV JAVA_HOME /opt/jdk
+ENV PATH $JAVA_HOME/bin:$PATH
+CMD java –version
+
+
+
+
+docker-compose.yml
+db:
+image:mysql
+environment:
+-MYSQL_USER=root
+-MYSQL_PASSWORD=123456
+
+app:
+image:my_app
+port:
+-80:80
+depends_on：
+-db
+environment:
+-DB_USER_NAME=root
+-DB_USER_PASSWORD=roor
+
+
+docker service create --replicas 2 -p 8099:80 --name MyfirstDevops nginx
+
+
+ docker swarm init
+  262  ss -ntl
+  263  docker node ls
+  264  docker?network?ls
+  265  docker network ls
+  266  docker images
+  267  docker service create --replicas 2 -p 8099:80 --name MyfirstDevops nginx
+  268  docker service ls
+  269  docker node ls
+  270  docker node  MyfirstDevops
+  271  docker node ls MyfirstDevops
+  272  docker node ps MyfirstDevops
+  273  docker node ps 
+  274  docker node ps bogon
+  275  docker service ps MyfirstDevops
+  276  docker service scale MyfirstDevops=5
+  277  docker service ps MyfirstDevops
+  278  docker images
+  279  docker service update --image wlbox MyfirstDevops
+  280  docker service ps MyfirstDevops
+  281  docker service ls 
+Docker service update –rollback devops
+
+
+docker pull busybox
+rm -rf k8s
+mkdir k8s
+images=`docker images|grep -i my:3 | awk '{print $3}'`
+if [ -n $images ]
+then
+	echo $images "is null"
+else
+	docker rmi $images -f
+fi
+docker run -it --name box1 -d busybox
+
+
+
+
+docker run 和kubectl run很相似 
+kubectl run --image=nginx:1.9.1 nginx-app --port=80  # 创建一个POD(很多容器)，默认建了一个
+deployment (代替RC,一个是service,下面是RC（deployment ）,已经被deployment 所替换，但是依然能用)
+kubectl describe pod nginx-app # 查看这个POD 的属性
+
+kubectl get deployments
+kubectl delete deployment nginx-app
+
+实验：
+kubectl run --image=nginx:1.9.1 nginx-app --port=80
+kubectl describe pod nginx-app
+curl xxx.xxx.xxx.xxx
+
+扩展：
+kubectl scale --replicas=3 nginx-app
+
+滚动升级：
+docker pull nginx
+kubectl set image deployment/nginx-app nginx-app=nginx
+
+yaml 怎么来写这个：
+
+YAML :
+我们使用YAML是因为它像XML或Json 一样利于读写的一种数据格式。描述数据的一种格式。
+
+Yaml 的基本规则：
+
+1、大小写敏感
+2、使用缩进表示层级关系
+3、禁止使用TAB缩进，只能是空格
+4、缩进没有要求，只要对齐就表示一个层级
+5、#表示注释
+6、字符重可也不用引号标注
+
+
+数据类型
+1、对象（MAP）：
+使用冒号加上空格（： ）表示一对键和值，同一缩进的所有键和值属于同一层级的对象
+#YAML 表示
+aga: 12
+name: asdfsd
+#相同的表示：
+   age: 12
+   name: asdfsd
+
+#相对JSON 的表示方法：
+#{‘age’:12,'name':'sgsgas'}
+
+2、数组
+使用连字符（- ）加上空格表示：
+#yaml 的表示
+- a
+- b
+- 12
+
+#对应到JSON
+['a','b',12]
+
+对于Ansible 每一个YAML 文件的开始都要写一个（---),表示的是一个文件的开始
+
+例如一个职工的信息，要求用yaml 表示：
+---
+#一个职工的信息
+name: zhangsan
+job: DevOps
+skill: sdgsd
+foods:
+ - apple
+ - orange
+ - maotou
+ - rou
+languages:
+    python: good
+    c++: good
+    c: good
+
+K8S+YAML的应用：
+
+创建一个redis-master、两个redis-slave、三个frontend。其中，slave会实时备份master中数据，frontend会向master中写数据，之后会从slave中读取数据。所有系统间的调用（例如slave找master同步数据；frontend找master写数据；frontend找slave读数据等），采用的是dns方式实现。
+
+
+
+redis-master-controller.yaml
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: redis-master
+  labels:
+    name: redis-master
+spec:
+  replicas: 1
+  selector:
+    name: redis-master
+  template:
+    metadata:
+      labels:
+        name: redis-master
+    spec:
+      containers:
+      - name: master
+        image: redis
+        ports:
+        - containerPort: 6379
+
+redis-master-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-master
+  labels:
+    name: redis-master
+spec:
+  ports:
+    # the port that this service should serve on
+  - port: 6379
+    targetPort: 6379
+  selector:
+    name: redis-master
+
+kubectl create -f redis-master-controller.yaml
+kubectl create -f redis-master-service.yaml
+kubectl get rc
+kubectl get pod
+
+redis-slave-controller.yaml
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: redis-slave
+  labels:
+    name: redis-slave
+spec:
+  replicas: 2
+  selector:
+    name: redis-slave
+  template:
+    metadata:
+      labels:
+        name: redis-slave
+    spec:
+      containers:
+      - name: worker
+        image: gcr.io/google_samples/gb-redisslave:v1 
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        ports:
+        - containerPort: 6379
+
+
+redis-slave-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-slave
+  labels:
+    name: redis-slave
+spec:
+  ports:
+  - port: 6379
+  selector:
+    name: redis-slave
+
+[root@k8s-master yaml]# kubectl create -f redis-slave-controller.yaml 
+
+[root@k8s-master yaml]# kubectl create -f redis-slave-service.yaml 
+
+[root@k8s-master yaml]# kubectl get rc
+
+[root@k8s-master yaml]# kubectl get pod
+
+frontend-controller.yaml
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: frontend
+  labels:
+    name: frontend
+spec:
+  replicas: 3
+  selector:
+    name: frontend
+  template:
+    metadata:
+      labels:
+        name: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: gcr.io/google_samples/gb-frontend:v3  
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        ports:
+        - containerPort: 80
+
+
+frontend-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  labels:
+    name: fronted
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    nodePort: 30001
+  selector:
+    name: frontend
+
+
+[root@k8s-master yaml]# kubectl create -f frontend-controller.yaml 
+
+[root@k8s-master yaml]# kubectl create -f frontend-service.yaml 
+[root@k8s-master yaml]# kubectl get rc
+
+
+nodePort: 30001
+
+

@@ -1,0 +1,25 @@
+Glance的具体功能如下：
+1.提供 REST API 让用户能够查询和获取 image 的元数据和 image 本身
+2.支持多种方式存储 image，包括普通的文件系统、Swift、Amazon S3 等
+3.对 Instance 执行 Snapshot 创建新的 image
+
+glance image-list可以查看目前已经存在的image
+创建image的两种方法：Web GUI和CLI
+glance image-create --name .. --file  /././..img --disk-format qcow2 --container-format bare --progress
+
+如何使用openstack CLI？
+1.openstack服务都有自己的CLI，命令都是服务的名字，只有keystone被替换成了openstack：如查看用户：openstack user -list
+
+2.各个服务的命令都有增、删、改、查的操作
+
+3.每个对象都有ID
+
+
+
+
+
+
+
+
+
+

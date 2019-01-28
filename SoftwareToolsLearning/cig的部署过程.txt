@@ -1,0 +1,129 @@
+1.创建自定义网络monitor（自定义网络名称），用于后期容器加入此网络中，当然你也可以忽略此步；
+2.创建Influxdb容器，创建数据用户、数据库；
+创建cadvisor的数据库与用户：
+CREATE DATABASE "cadvisor"
+创建管理用户：
+CREATE USER "username" WITH PASSWORD 'password' WITH ALL PRIVILEGES
+
+3.创建cAdvisor容器；
+4.创建Grafana容器，配置grafana；
+
+
+数据流向：docker主机+容器-->cadvisor-->influxdb-->grafana-->web页面
+
+--privileged=true:设置挂载目录权限为最大，否则挂载出错
+
+influxdb和grafana只需要部署一次，然后根据需要将cadvisor部署在需要被监测的docker主机上即可
+
+Swarm多节点部署：
+主机IP：192.168.15.129  主机名：master 角色：Swarm的主 grafana容器 influxdb容器 cadvisor容器
+主机IP：192.168.15.130  主机名：node1  角色：Swarm的node节点 cadvisor节点
+主机IP：192.168.15.131  主机名：node2  角色：Swarm的node节点 cadvisor节点
+一、准备工作：
+创建influxdb的宿主机目录挂载到容器：
+mkdir -p /opt/influxdb
+下载镜像（可做可不做，在创建容器的时候，如果本地没有会自动下载）
+docker pull tutum/influxdb
+docker pull google/cadvisor
+docker pull grafana/grafana
+查看镜像
+docker images
+
+二、编写创建容器的yml文件
+编写docker-compose.yml文件
+version: '3.7'
+
+services:
+  influx:
+    image: tutum/influxdb
+    ports:
+       - "8083:8083"
+       - "8086:8086"
+     volumes:
+       - "/opt/influxdb:/var/lib/influxdb"
+     deploy:
+       replicas: 1
+       placement:
+          constraints: [node.role==manager]
+
+  grafana:
+    images:grafana/grafana
+    ports:
+      - "3030:3030"
+    depends_on:
+      - "influxdb"
+    deploy:
+        replicas: 1
+        placement:
+           constraints: [node.role==manager]
+
+  cadvisor:
+     images: google/cadvisor
+     ports:
+       - "8080:8080"
+      hostname: "{{.Node.Hostname}}"
+      command: -logtosterr -docker_only -storage_driver=influxdb -storage_driver_db=cadvisor -storage_driver_host=influx:8086
+      volumes:
+        - /:/roofts:ro
+        - /var/run:/var/run:rw
+        - /sys:/sys:ro
+        - /var/lib/docker:/var/lib/docker:ro
+      depends_on:
+        - influx
+      deploy:
+         mode: global
+
+volumes:
+  influx:
+    driver: local
+  grafana: 
+    dricer: local   
+
+三、创建Swarm集群
+在master上执行
+docker swarm init --advertise-addr 192.168.15.129
+在node上执行master上出现的join语句
+在master上查看集群主机
+docker node ls
+
+四、 创建集群容器
+docker stack deploy -c docker-compose.yml swarm-monitor
+查看创建的容器
+docker service ls
+查看容器的服务
+docker service ps swarm-monitor_cadvisor
+docker service ps swarm-monitor_grafana
+docker service ps swarm-monitor_influx
+
+五、访问web测试
+1.访问influxdb并创建数据库
+登录influxdb的8083端口，并添加数据库
+登录URL：http://192.168.15.129:8083
+2.访问vadvisor
+登录URL：http://192.168.15.129:8080
+登录数据库查看有没有采集的数据写入
+3.访问grafana并配置
+登录URL：http://192.168.15.129:3000
+默认用户名：admin
+默认密码：admin
+首次登录会提示修改密码
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,218 @@
+﻿Linux日志
+(Linux系统拥有非常灵活和强大的日志功能，
+可以保存几乎所有的操作记录，
+我们可以从中检索出我们需要的信息。)
+1 作用和目的
+	Linux系统内核和许多程序会产生各种
+	错误信息、警告信息和其他的提示信息，
+	这些信息对管理员了解系统的运行状态是非常有用的，
+	所以应该把它们写到日志文件中去
+	
+常用日志文件
+系统日志是由一个名为syslog的服务管理的，
+位于/etc/rsyslog.conf
+如以下日志文件都是由syslog日志服务驱动的：
+/var/log/anaconda/anaconda.log
+在安装Linux时，所有安装信息都储存在这个文件中。
+
+/var/log/boot.log：     600
+记录了系统在引导过程中发生的事件，
+就是Linux系统开机自检过程显示的信息
+
+
+/var/log/btmp ：		600
+记录Linux登陆失败的用户、时间以及远程IP地址
+被编码过，所以必须以lastb解析;
+
+/var/log/wtmp：			644
+该日志文件永久记录每个用户登录、注销及
+系统的启动、停机的事件，使用last命令查看
+
+/var/run/utmp：
+该日志文件记录有关当前登录的每个用户的信息。
+如 who、w、users、finger等就需要访问这个文件
+
+/var/log/lastlog ：		644
+记录所有用户最后一次成功登陆的时间、登陆IP等信息
+使用lastlog查看
+
+以 上提及的3个文件（/var/log/wtmp、/var/run/utmp、
+ /var/log/lastlog）是日志子系统的关键文件，
+ 都记录了用户登录的情况。这些文件的所有记录
+ 都包含了时间戳。这些文件是按二进制保存的，
+ 故不能用less、cat之类的命令直接查看这些文件，
+ 而是需要使用相关命令通过这些文件而查看。
+ 其中，utmp和wtmp文件的数据结构是一样的，
+ 而 lastlog文件则使用另外的数据结构，
+ 关于它们的具体的数据结构可以使用man命令查询。
+
+/var/log/cron：
+用来记录crontab这个定时服务的内容;
+
+/var/log/cups/
+涉及所有打印信息的日志。
+
+/var/log/dmesg
+内核日志;
+
+/var/log/firewalld
+firewalld防火墙日志;
+
+/var/log/maillog
+记录了每个发送到系统或从系统发出电子邮件的活动。
+它可以用来查看用户使用哪个系统发送工具或
+把数据发送到哪个系统。
+
+/var/log/messages ：	600
+记录Linux操作系统常见的系统和服务错误信息
+几乎所有的开机系统发生的错误都会在此记录;
+
+/var/log/secure ：		600
+Linux系统安全日志，记录用户和工作组变坏情况、
+用户登陆认证情况
+
+/var/log/Xorg.x.log 
+来自X的日志信息。
+
+/var/run/yum.log
+用yum下载安装更新的所有东西	
+
+
+
+
+
+who命令查询utmp文件并报告当前登录的每个用户。	
+who的默认输出包括用户名、终端类型、登录日期及远程主机
+	
+w命令查询utmp文件并显示当前系统中每个用户
+和它所运行的进程信息。	
+	
+	
+
+
+
+
+****%%%%%%*****
+	
+Linux系统故障分析与排查
+
+我们在处理linux系统出现的各种故障时，首先发现的症状，而我们所要做的事情就是
+找到问题的根源，对症下药及时解决问题。
+
+linux系统故障的一般处理思路
+
+报错信息--->查阅日志文件--->分析定位问题--->解决问题。
+
+在这种情况下，我们要熟悉linux系统的日志管理，
+Linux系统中运行的程序通常会把系统消息和错误消息写入相应的日志文件，
+这样系统一旦出现问题就会“有据可查”，这就要求我们对于Linux系统中的
+一些常见日志文件，有必要熟悉其相应的用途，
+这样才能在需要的时候更快地找到问题所在，及时解决各种故障。
+
+
+>/var/log/messages：记录Linux内核消息及各种应用程序的公共日志信息，包括启动、IO错误、网络错误、程序故障等。对于未使用独立日志文件的应用程序或服务，一般都可以从该文件获得相关的事件记录信息。 
+>/var/log/cron：记录crond计划任务产生的事件消息。 
+>/varlog/dmesg：记录Linux系统在引导过程中的各种事件信息。 
+>/var/log/maillog：记录进入或发出系统的电子邮件活动。 
+>/var/log/lastlog：最近几次成功登录事件和最后一次不成功登录事件。用last查看 
+>/var/log/rpmpkgs：记录系统中安装各rpm包列表信息。 
+>/var/log/secure：记录用户登录认证过程中的事件信息。 
+>/var/log/wtmp：记录每个用户登录、注销及系统启动和停机事件。 
+>/var/log/utmp：记录当前登录的每个用户的详细信息 ，用last查看
+>/var/log/messages 存储所有的全局系统活动数据，包括开机信息
+
+
+
+如何从日志文件中分析得到错误所在？
+linux系统的日志文件是通过syslog守护程序创建的，它在 syslog 套接字 /dev/log 上监听日志信息，
+然后将它们写入适当的日志文件中。
+
+Syslog 信息或事件包括一个带有几个标准字段的消息头，
+可以使分析和路由更方便。它们包括时间戳、应用程序的名称、
+在系统中信息来源的分类或位置、以及事件的优先级。
+
+[root@computer etc]# vi rsyslog.conf
+//将cron设备中的任何级别的信息记录到/var/log/cron文件中
+cron.*                                                  /var/log/cron
+//将authpriv的任何级别的信息记录到/var/log/secure文件中
+
+authpriv.* /var/log/secure
+
+
+优先级
+在Linux内核中，根据日志消息的重要程度不同，
+将其分为不同的优先级别（数字等级越小，优先级越高，消息越重要）。
+
+
+>0 EMERG(紧急)：会导致主机系统不可用的情况。 
+>1 ALERT(警告)：必须马上采取措施解决的问题。 
+>2 CRIT（严重）：比较严重的情况。 
+>3 ERR（错误）：运行出现错误。 
+>4 WARNING(提醒)：可能影响系统功能，需要提醒用户的重要事件。 
+>5 NOTICE(注意)：不会影响正常功能，但是需要注意的事件。 
+>6 INFO (信息)：一般信息。 
+>7 BEBUG(调试)：程序或系统调试信息等。 
+>none 没有重要级，通常用于排错（不记录任何日志消息）
+>*   所有级别，除了none
+
+
+
+
+下面是一个包含 syslog 消息头的日志信息，
+它来自于控制着到该系统的远程登录的 sshd 守护进程，这个信息描述的是一次失败的登录尝试：
+[root@computer log]# cat messages
+    时间戳        主机名  应用名[包含PID或内核标识的方括号]      消息的具体内容
+Oct 28 14:13:44 computer chronyd[656]: System clock wrong by 4.621156 seconds, adjustment started
+
+
+
+
+如果你想检查你的系统是否安全，你可以在验证日志中检查登录失败的和登录
+成功但可疑的用户。当有人通过不正当或无效的凭据来登录时会出现认证失败
+，这通常发生在使用 SSH 进行远程登录或 su 到本地其他用户来进行访问权时
+。这些是由插入式验证模块（PAM）来记录的。在你的日志中会看到像 Failed password 
+和 user unknown 这样的字符串。而成功认证记录则会包括像 
+Accepted password 和 session opened 这样的字符串。
+
+
+失败的案例
+[root@computer ~]# grep "failed" /var/log/secure
+Oct 22 19:54:07 computer useradd[2676]: failed adding user 'dbus', exit code: 9
+Oct 28 12:09:12 computer unix_chkpwd[1193]: password check failed for user (root)
+Oct 28 12:09:28 computer unix_chkpwd[1197]: password check failed for user (root)
+Oct 27 15:54:37 localhost sshd[4941]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=192.168.1.198  user=root
+
+
+
+成功的案例
+
+[root@computer log]# grep "password" /var/log/secure
+Oct 23 09:06:13 192 sshd[2182]: Accepted password for root from 192.168.194.1 port 58798 ssh2
+Oct 23 10:45:44 192 sshd[2733]: Accepted password for root from 192.168.0.192 port 50160 ssh2
+Oct 23 16:18:25 192 sshd[3616]: Accepted password for root from 192.168.0.192 port 60528 ssh2
+Oct 23 18:20:50 bogon sshd[2171]: Accepted password for root from 192.168.1.198 port 55470 ssh2
+Oct 23 19:05:45 bogon sshd[3102]: Accepted password for root from 192.168.1.198 port 64558 ssh2
+
+
+由于没有标准格式，所以你需要为每个应用程序的日志使用不同的命令
+
+var/log/syslog
+
+默认Fedora不生成该日志文件，但可以配置/etc/syslog.conf让系统生成该日志文件。它和/etc/log/messages日志文件不同，
+它只记录警告信息，常常是系统出问题的信息，所以更应该关注该文件。要让系统生成该日志文件，在/etc/rsyslog.conf文件中加上
+：*.warning /var/log/syslog 该日志文件能记录当用户登录时login记录下的错误口令、Sendmail的问题、su命令执行失败等信息。
+该日志文件记录最近成功登录的事件和最后一次不成功的登录事件，由login生成。在每次用户登录时被查询，该文件是二进制文件，
+需要使用lastlog命令查看，根据UID排序显示登录名、端口号和上次登录时间。如果某用户从来没有登录过，就显示为"**Never logged in**"。
+该命令只能以root权限执行。
+
+
+日志很重要，也是我们运维人员必会的一个基本技能之一，因为日志中记录了很多重要的信息，特别是一些错误信息，一般可以通过message查看错误日志。有很多服务有自己的日志，通常可以查看对应的日志查找相应的错误，有系统日志还需要通过last（b）二进制文件，
+
+
+
+
+	
+	
+	
+	
+	

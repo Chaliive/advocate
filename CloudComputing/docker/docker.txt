@@ -1,0 +1,191 @@
+容器是把iamge进行实例化（docker run）实现的，一个image可以对应多个容器
+images是分层结构，通过afos联合，通过container展示
+
+client  docker_host      registry
+命令     images       仓库(有多个images)
+
+3306:3306
+
+docker cp index.html  (container ID):/usr/share/nginx/html/  放入自己的页面
+
+docker run --name n2 -d -p 80:80 -v /usr/docker/nginx/html:/usr/share/nginx/html nginx
+-v(olunme) path(可以是自己创建的) 让本地的卷(即目录)和container的目录对应
+
+
+   37  docker ps  列出
+   38  docker ps -a  列出所有的端口
+   39  docker rm  mynginx  移除mynginx
+   44  docker images  列出所有镜像
+   46  docker run -d --name mynginx -p 80:80 nginx  后台开启一个镜像，端口为80指定
+   49  cat index.html
+   50  docker cp index.html f1ef90fd383c:/usr/share/nginx/html/
+   53  docker run --name n3 -d -p 90:80 -v /usr/docker/nginx/html:/usr/share/nginx/html nginx  让本地的卷(即目录)和container的目录对应
+   54  cd /usr/docker/nginx/htm
+
+
+
+docker run -it --name mybox2 busybox /bin/sh
+
+-it 交互界面
+/bin/sh 命令
+exit 退出（退出相当于stop了，再次运行需要start）
+再次进入的两种方式
+docker attach mybox2 
+docker exec -it mybox2 /bin/sh
+
+docker commit ID name  把当前的ID为ID的容器保存为镜像
+
+/var/lib/docker/image/overlay/imagedb/content/sha256/ 所有images存放的位置。
+
+通过docker images查看保存的mirroname
+
+docker run -it --name zhou123 mirroname /bin//sh
+
+docker inspect 容器的ID(name)  查看详情
+
+***注意***
+
+当一个容器里没有任何软件在运行的时候容器自动摧毁，所有在容器里数据库操作一定要将数据库保存到本地的卷(-v参数)
+
+**********
+
+
+docker save
+docker import
+docker export
+
+docker stop $(docker ps -q) 全关闭
+docker rm $(docker ps -aq) 全删除
+
+
+
+
+
+
+搭建自己的registry私有仓库
+
+
+
+我们知道可以使用hub.docker.com作为我们公共或者私有的registry。所以我们在利用docker开发构建容器服务时，我们希望能够建立自己的私有registry,上传镜像值我们的私有registry中心，然后在其他物理机上部署的时候，可以快速的pull,然后实现大规模的分发以及部署，提高效率。
+下面将会说一下如何通过registry容器实现这个
+ 
+环境：centos7.0,  docker17.09版本
+docker1.12版本以后，docker的可执行文件从/usr/bin/docker变成了/ussr/bin/dockerd,每一个版本在不同的环境下，dockerd的daemon都是不同的配置，具体的要根据docker官网的指导进行配置。我们在网上可以看到很多关于如何配置docker的daemon启动参数教程，以及一些出现的问题，其实大部分都是讲的比较乱的，或者不根据自己的实际系统和docker版本去确定如何配置的，因为不同的系统版本和docker版本具体的opts的选项是不同的，这个配置的文件的位置也是不一样的，如果没清楚整个区别，就跟着网上的改来改去，最后配置还是没能生效。
+（1）无认证的registry
+在环境中，dockerd的配置文件在/etc/docker/daemon.json中，如果没有该文件，可以手动创建。
+ 
+第一步：pull docker官方的registry的第二个版本,docker1.6版本以上支持registry2
+docker pull registry:2.6.0
+或者docker pull registry 不指定版本，表示latest版本
+ 
+第二步：配置daemon.json，去掉docker默认的https的访问
+vim /etc/docker/daemon.json
+里面的内容是一个json对象,加上一项insecure-registries，地址自己更改：
+{
+"insecure-registries":["192.168.1.78:5000"]
+}
+ 
+然后重启docker,执行
+systemctl daemon-reload docker
+systemctl restart docker
+ 
+第三步：无认证启动registry容器
+ 
+[root@localhost ~]# docker run -idt -v /opt/wlregistry:/var/lib/registry -p 5000:5000 --restart=always --name registry2 --privileged=true registry:2.6.0
+ 
+参数说明： 
+-v /opt/registry:/tmp/registry :默认情况下，会将仓库存放于容器内的/tmp/registry目录下，指定本地目录挂载到容器 
+–privileged=true ：CentOS7中的安全模块selinux把权限禁掉了，参数给容器加特权，不加上传镜像会报权限错误(OSError: [Errno 13] Permission denied: ‘/tmp/registry/repositories/liibrary’)或者（Received unexpected HTTP status: 500 Internal Server Error）错误
+
+
+上传到私有镜像的镜像到时是默认存放在容器的/var/lib/registry/，为了防止删除registry,上传的镜像也被删除，所以启用一个volume，将上传的镜像持久化保存在我们物理机上，这里保存位置是/opt/registry/
+ 
+第四步：测试是否启动容器
+curl http://192.168.1.78:5000/v2/_catalog
+如果返回{"repositories":[]}，代表启动成功了！
+ 
+第五步：测试上传到我们自己的私有registry
+将nginx这个镜像重命名tag
+docker tag nginx 192.168.1.78:5000/mynginx
+这里需要注意的是重命名的tag必须带有建立192.168.1.78:5000/这个前缀，后面的mynginx是新镜像名。
+然后开始进行push到我们建立的私有registry
+docker pull 192.168.1.78:5000/mynginx
+再通过运行
+curl http://192.168.1.78:5000/v2/_catalog
+可以看到返回{"repositories":["mynginx"]}
+说明已经push到了自己的registry
+
+第六步：测试pull
+同样还是在本机上进行pull
+首先删除本机存在的镜像192.168.1.78:5000/mynginx（刚才通过tag重命名的）
+docker rmi 192.168.1.78:5000/mynginx
+然后
+docker images
+可以看到已经没有了192.168.1.78:5000/mynginx这个镜像
+下面开始pull这个镜像
+docker pull 192.168.1.78:5000/mynginx
+然后再看
+docker images
+可以看到出现这个192.168.1.78:5000/mynginx
+说明pull成功了
+
+第七步：在其他的物理机上pull这个镜像
+同样需要在安装docker，然后再/etc/docker/daemon.json这个文件中
+添加insecure-registries，ip地址自己更改：
+{
+"insecure-registries":["192.168.1.78:5000"]
+}
+然后重启docker,执行
+ststemctl daemon-reload docker
+systemctl restart docker
+docker pull 192.168.1.78:5000/mynginx 
+这样子就可以从自己的registry拉取镜像了，当然也可以上传镜像
+假如有一个mynginx:1.1
+docker tag 192.168.1.78:5000/mynginx 192.168.1.78:5000/mynginx:1.1
+docker push 192.168.1.78:5000/mynginx:1.1
+其实192.168.1.78:5000/这个就是建立的私有registry的地址
+
+
+
+
+
+解决进入后无权限的问题
+
+
+docker exec -it -u root 0cd1a6887c12 /bin/sh
+
+启用一个有python3-centos7的container：指定ip为666，与app.py的port值一样。注意一定是访问物理机的ip和指定的端口888
+
+docker run -it -p 888:666 7b379e88dd0f /bin/sh
+
+from flask import Flask, request, render_template
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return "hello"
+
+app.run(host='172.17.0.2', port=666, debug=True)
+
+
+在浏览器输入物理机ip和端口就能访问
+
+
+
+一、容器已安装python3和flask，并且成功用网页访问
+
+二、安装libvirt：
+yum -y install libvirt（非必要？）
+yum -y install libvirt-devel
+上传python3-libvirt3.7，解压，进入解压目录
+python setup.py build
+python setup.py install
+
+三、
+
+
+
+
+
+

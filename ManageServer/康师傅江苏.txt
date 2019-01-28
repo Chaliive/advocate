@@ -1,0 +1,50 @@
+2个节点
+ip地址               容器数          操作系统
+172.19.21.66        17              CoreOS         
+172.19.21.67        17              CoreOS
+
+14个应用：4个默认系统应用+10个活动应用
+应用名称                             状态             容器数量
+acslogging                         running           4
+acsmonitoring                    running           2
+acsrouting                          running           2
+acsvolumdriver                   running           2
+common-user-service         running           2
+jiangsuChristmasH5            running           2
+test-code-package-service  stop
+test-login-service                stop
+test-manager-pc                 stop
+test-raffle-award-service     running
+test-raffle-draw-service       running
+test-shtmf-user-h5              stop
+test-shtmf-user-service        stop
+test-user-service                  stop
+
+
+
+15个服务
+服务名称              所属应用     
+logspout            acslogging
+logtail                acslogging
+acs-monitoring  acsmonitoring
+routing              acsrouting
+volumedriver     acsvolumedriver
+
+
+34个容器
+
+
+有两台主机，对外ip分别为(47.100.56.78 / 101.132.69.106)
+只有acslogging应用有两个服务(logspout和logtail)，其它的都是一个应用对应一个服务，一个服务有两个容器
+
+
+
+
+
+
+
+
+
+
+
+

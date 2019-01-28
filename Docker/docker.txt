@@ -1,0 +1,24 @@
+扩展能力的标签：
+probe     |   设置服务的健康性检查
+rolling_updates   |    设置服务的滚动更新
+parallelism     |    设置rolling_updates每次并行更新的窗口数量。注意：此标签必须和rolling_updates配合使用，单独使用无效
+depends       |    设置服务的依赖关系
+scale             |    设置该服务的数量，横向扩展服务
+routing         |    设置该服务的访问域名
+routing_session_sticky    |    设置routing在做请求路由的时候，是否session sticky，即会话保持。注意：此标签必须和routing配合使用，单独使用无效
+lb                 |    通过自定义阿里云负载均衡nat映射的方式来暴露服务端口到公网或者内网。
+日志              |   和阿里云日志服务集成，采集容器日志并且发送到阿里云日志服务。
+global           |   设置该服务为全局服务。
+
+
+
+
+
+
+
+
+
+
+
+
+

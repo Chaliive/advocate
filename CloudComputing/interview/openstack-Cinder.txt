@@ -1,0 +1,19 @@
+一、cinder-api：
+所有对cinder的请求都先由cinder-api处理。cinder-api对外提供多个api接口，在keystone中我们可以查询cinder-api的endpoints。openstack endpoint show cinder
+
+cinder-api 对接收到的 HTTP API 请求会做如下处理：
+1.检查客户端传人的参数是否合法有效
+2.调用 cinder 其他子服务的处理客户端请求
+3.将 cinder 其他子服务返回的结果序列号并返回给客户端
+
+所有对volume卷的相关操作，cinder-api都可以响应
+
+
+二、cinder-scheduler：
+创建volume时，cinder-scheduler会基于容量、类型等条件选择出最合适的存储节点，然后让其创建volume。
+
+
+三、cinder-volume：
+openstack对volume的操作，最后都是交给cinder-volume来完成的，它与volume provider一起实现volume生命周期(如创建，括容，删除等)的管理。存储节点在配置文件/etc/cinder/cinder.conf中用volume_driver选项配置使用的driver：volume_driver=cinder.volume.drivers.lvm.LVMvolumeDriver
+
+

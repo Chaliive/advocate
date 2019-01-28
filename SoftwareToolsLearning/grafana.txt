@@ -1,0 +1,130 @@
+grafana实现报警：
+仪表盘-->表盘-->Alert-->设置好了要Save
+
+Dingding的配置:
+New Channel-->Type选择DingDing-->DingDing settings Url为DingDing的token
+
+
+Grafana
+是一个可视化面板(Dashboard)，功能齐全的度量仪表盘和图形编辑器，支持Graphite、zabbix、InfluxDB、Prometheus和OpenTSDB作为数据源。
+
+
+
+注意：每次修改配置后都要重启服务
+
+
+
+仪表盘默认是过去6小时的数据，可以通'放大镜'按钮扩大时间间隔，可以在表上缩小时间间隔，可以通过左右箭头调整不同的时间段
+
+通过点击'时钟'按钮可以设置默认时间范围，每隔多长时间刷新一次
+
+setting:manage Dashboard setting and features such as Templating and Annotations(注释)
+
+Ctrl + 点击图例名称：隐藏其它series
+
+Ctrl + s: 保存当前仪表盘
+Ctrl + f: 查找
+
+
+编辑里面的各选项的意义：
+General
+info：
+Title：仪表盘的标题
+Description：添加图表的描述，保存后可以在图表的左上角(有一个'i')悬停鼠标查看
+Transparent：去掉背景
+
+Repeat：for more detail at http://docs.grafana.org/reference/templating/#repeating-panels
+
+Drilldown / detail link
+drilldown部分可以允许给图表添加一个可以连接到其它仪表盘或URLs的动态链接
+每个链接有一个标题，类型和参数，这个链接可以连接一个仪表盘或一个绝对链接，如果是一个仪表盘链接，则dashboard的值必须是一个仪表盘的名字。如果是一个absolute链接，则URl是一个链接的URL。
+params允许给连接添加一个额外的URL参数，格式是name=value多个参数用&分开。模板变量可以通过使用$myvar作为值被添加。
+当连接到其它使用模板变量的仪表盘，你可以用 var-myvar=value 迁移到一个模板变量到一个链接需要的值。
+
+Axes:
+
+Left Y/Right Y
+Unit：展示Y值的单位
+
+数据单位的问题：
+IEC：gibibytes,mebibytes,kibibytes         是1024进制 Gib，Mib，Kib
+Metric：gigabytes,megabytes,kilobytes  是1000进制 GB， MB， KB
+
+Scale：用于Y值，线性或对数的标度
+Decimals：Y轴数字的小数位数
+Label：Y轴标签
+
+X-Axis：
+Mode：
+1.默认选项是时间，意味着x轴展示的是时间，数据是通过时间进行分组的
+2.Series选项是指数据是以序列分组而不是时间分组，Y轴仍然显示值
+3.Histogram选项把图表转化成直方图，
+
+
+Display:
+Draw Options:
+Draw Modes
+控制图形的可视属性
+Series overrides：修饰某个序列使之与其它序列不同，比如，可以让一个序列的线型更宽让它看起来比其它的更显著。
+
+
+主题更改
+占地用户图标--preferences--Preferences--UI Theme--Light/Dark
+
+/rootfs/var/lib/docker
+
+
+仪表盘模板可以让你创建一个交互式和动态性的仪表板，它是Grafana里面最强大的、最常用的功能之一。
+
+
+singlestat状态图
+状态图为类似刻度盘的图形，主要用于展示单一的数据
+
+Options选项卡下有四个选项：
+Value
+Stat：选择读取数据的统计类型，可选择最后、最大、最小、平均或总计等
+Prefix：前缀，需要手动输入内容
+Postfix：后缀，需要手动输入内容
+Unit：单位，某些单位会自动自动转换
+Decimals：小数位，设置显示的小数位
+Font size：配置字体大小
+
+Coloring
+Background：背景颜色，默认为不勾选
+Value：数值颜色，默认为不勾选
+Thresholds：阈值，格式为"a,b"，表示将时间分为小于a的值，a~b的值，大于b的值
+Colors：阈值三个区间的颜色
+
+Spark lines
+Show：是否开启该功能，默认为不勾选
+Full height：图表是否为全高模式
+Fill Color：曲线图的填充颜色
+Line Color：曲线图曲线的颜色
+
+Gauge
+Show：是否开启样式
+Min：最小值
+Max：最大值
+Threshold labels：阈值标签
+Threshold markers：阈值颜色标签
+
+
+单位的问题：
+IEC：gibibytes,mebibytes,kibibytes         是1024进制  Gib,Mib,Kib
+Metric：gigabytes,megabytes,kilobytes  是1000进制  GB,MB,KB
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

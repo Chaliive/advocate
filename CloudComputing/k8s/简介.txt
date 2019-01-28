@@ -1,0 +1,44 @@
+docker 的 swarm集群 和 compose编排 是怎样管理容器的？怎样进行滚动升级？产生一个service
+
+k8s简介：管理容器(kubernetes)，分布式架构
+可以干的：
+1、可以负载均衡，弹性扩展
+2、自动化容器的部署和复制
+3、随时扩展或收缩容器规模
+4、将容器组织成组，并且提供容器间的负载均衡
+5、很容易地升级应用程序容器的新版本
+6、提供容器弹性，如果容器失效就替换它，等等
+
+不可以干的：
+1、中间件（例如消息总线）、数据处理框架（如Spark）、数据库（如MySQL），也不提供集群存储系统（如Ceph）。
+2、不部署源代码也不会构建应用程序，持续集成(Continuous Integration: CI)的工作也需要由用户按自己项目决定。
+3、不提供应用程序的配置。
+4、不提供对硬件服务器的配置、维护、管理
+
+
+核心组件：
+master：
+node：kubelet：管理整个容器的生命周期，多个docker容器作为一个pod(相当于一个业务上的虚拟主机)，每个pod内的容器共享资源。多个pod形成一个service
+etcd提供分布式数据存储（以键值对的形式）。scheduler通过对etcd的数据访问去发现和注册服务。
+
+endpoint会写进每个容器的ip，当server进行访问service时，endpoint会进行分配。endpoint和service之间有一个kube proxy负载均衡器。
+
+kubectl：命令行管理
+kubelet：管理容器的生命周期
+kube proxy：负载均衡器
+
+
+
+label and selector：label给对象添加可识别的属性，selector选择指定label的对象。
+
+
+RC确保他所关联的pod在任何时候都有一定数量的可用pod，具有高可用
+
+查看日志：
+kubelet logs pod redis-master-jwbss
+
+
+
+
+
+

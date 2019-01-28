@@ -1,0 +1,140 @@
+准备3台机器，这样才能完成分布式集群的实验，当然能有更多机器更好：
+
+    192.168.77.128
+    192.168.77.130
+    192.168.77.134
+
+角色划分：
+
+    3台机器全部安装jdk1.8，因为elasticsearch是java开发的
+    3台全部安装elasticsearch (后续都简称为es)
+    192.168.77.128作为主节点
+    192.168.77.130以及192.168.77.134作为数据节点
+    主节点上需要安装kibana
+    在192.168.77.130上安装 logstash
+
+ELK版本信息：
+
+    Elasticsearch-6.0.0
+    logstash-6.0.0
+    kibana-6.0.0
+    filebeat-6.0.0
+
+配置三台机器的hosts文件内容如下：
+
+$ vim /etc/hosts
+192.168.77.128 master-node
+192.168.77.130 data-node1
+192.168.77.134 data-node2
+
+然后三台机器都得关闭防火墙或清空防火墙规则。
+安装es
+
+先上官方的安装文档：
+
+    https://www.elastic.co/guide/en/elastic-stack/current/installing-elastic-stack.html
+
+我这里也是通过官方给的源进行安装，以下操作3台机器上都要执行，因为三台机器都需要安装es：
+
+[root@master-node ~]# rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
+[root@master-node ~]# vim /etc/yum.repos.d/elastic.repo  # 增加以下内容
+[elasticsearch-6.x]
+name=Elasticsearch repository for 6.x packages
+baseurl=https://artifacts.elastic.co/packages/6.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md
+[root@master-node ~]# yum install -y elasticsearch
+
+如果使用官方的源下载实在太慢的话，也可以直接下载rpm包进行安装：
+
+[root@master-node ~]# wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.0.0.rpm
+[root@master-node ~]# rpm -ivh elasticsearch-6.0.0.rpm
+
+配置es
+
+elasticsearch配置文件在这两个地方，有两个配置文件：
+
+[root@master-node ~]# ll /etc/elasticsearch
+总用量 16
+-rw-rw---- 1 root elasticsearch 2869 2月  17 03:03 elasticsearch.yml 
+-rw-rw---- 1 root elasticsearch 2809 2月  17 03:03 jvm.options
+-rw-rw---- 1 root elasticsearch 5091 2月  17 03:03 log4j2.properties
+[root@local ~]# ll /etc/sysconfig/elasticsearch 
+-rw-rw---- 1 root elasticsearch 1613 2月  17 03:03 /etc/sysconfig/elasticsearch
+[root@master-node ~]# 
+
+elasticsearch.yml 文件用于配置集群节点等相关信息的，elasticsearch 文件则是配置服务本身相关的配置，例如某个配置文件的路径以及java的一些路径配置什么的。
+
+
+开始配置集群节点，在 192.168.77.128 上编辑配置文件：
+
+[root@master-node ~]# vim /etc/elasticsearch/elasticsearch.yml  # 增加或更改以下内容
+cluster.name: master-node  # 集群中的名称
+node.name: master  # 该节点名称
+node.master: true  # 意思是该节点为主节点
+node.data: false  # 表示这不是数据节点
+network.host: 0.0.0.0  # 监听全部ip，在实际环境中应设置为一个安全的ip
+http.port: 9200  # es服务的端口号
+discovery.zen.ping.unicast.hosts: ["192.168.77.128", "192.168.77.130", "192.168.77.134"] # 配置自动发现
+[root@master-node ~]# 
+
+然后将配置文件发送到另外两台机器上去：
+
+[root@master-node ~]# scp /etc/elasticsearch/elasticsearch.yml data-node1:/tmp/
+[root@master-node ~]# scp /etc/elasticsearch/elasticsearch.yml data-node2:/tmp/
+
+到两台机器上去更改该文件，修改以下几处地方：
+
+192.168.77.130：
+
+[root@data-node1 ~]# vim /tmp/elasticsearch.yml 
+node.name: data-node1
+node.master: false
+node.data: true
+[root@data-node1 ~]# cp /tmp/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml 
+cp: overwrite ‘/etc/elasticsearch/elasticsearch.yml’? yes
+[root@data-node1 ~]# 
+
+192.168.77.134：
+
+[root@data-node2 ~]# vim /tmp/elasticsearch.yml 
+node.name: data-node2
+node.master: false
+node.data: true
+[root@data-node2 ~]# cp /tmp/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml 
+cp: overwrite ‘/etc/elasticsearch/elasticsearch.yml’? yes
+[root@data-node2 ~]# 
+
+完成以上的配置之后，到主节点上，启动es服务：
+
+    systemctl start elasticsearch.service
+    ps aux |grep elasticsearch
+    netstat -lntp |grep java
+主节点启动完成之后，再启动其他节点的es服务。
+
+300端口是集群通信用的，9200则是数据传输时用的。
+
+主节点启动成功后，依次启动其他节点即可，我这里其他节点都是启动正常的。
+
+自己下载(上传java包，安装java环境)
+
+集群的健康检查：
+curl '192.168.77.128:9200/_cluster/health?pretty'
+查看集群的详细信息：
+curl '192.168.77.128:9200/_cluster/state?pretty'
+
+网页查看：
+192.168.77.128:9200/_cluster/health?pretty
+192.168.77.128:9200/_cluster/state?pretty
+
+
+主节点安装kibana
+副节点安装logstash
+
+
+
+
+

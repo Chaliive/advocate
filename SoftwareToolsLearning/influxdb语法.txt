@@ -1,0 +1,159 @@
+1.influxDB是一个时序数据库
+
+2.可以通过生成原始HTTP请求来使用数据库
+
+3.创建数据库：CREATE DATABASE <db_name>，数据库的名称可以是任何unicode字符，但需要用双引号，如果只包含ASCII字母，数字，下划线且不以数字开头，则可以不加引号。
+
+4.显示数据库：SHOW DATABASES,显示所有现有数据库
+
+5._internal数据库包含influxDB存储内部的运行指标
+
+6.USE <db name>，使用数据库
+
+将数据写入influxDB，其遵循以下格式：
+<measurement>[,<tag-key>=<tag-value>...] <field-key>=<field-value>[,<field2-key>=<field2-value>...] [unix-nano-timestamp]
+如：
+1.cpu,host=serverA,region=us_west value=0.64
+2.payment,device=mobile,product=Notepad,method=credit billed=33,licenses=3i 1434067467100293230
+3.stock,symbol=AAPL bid=127.46,ask=127.48
+4.temperature,machine=unit42,type=assembly external=25,internal=37 1434067467000000000
+
+<measurement>         需要      
+tag set                         可选     
+Field set                       必选      
+timestamp                   可选，如果不指定，则influxDB将使用UTC时间
+
+默认值为float类型，可以在数字后加i表示为整数，如：125i
+
+插入值
+INSERT mymeas  value=1.0   float
+INSERT mymeas  value=1      float  
+INSERT mymeas  value=1i      int
+
+INSERT mymeas  value="string along"  字符串用""
+INSERT mymeas  value=true   bool值
+
+
+数据查询
+
+SELECT语句      按时间顺序DESC    查询中的时间语法
+WHERE语句      
+GROUP BY语句
+
+
+基本的SELECT语名
+该SELECT语句查询来自特定measurement或measurement的数据
+
+SELECT <field_key>[,<field_key>,<tag_key>] FROM <measurement_name>[,<measurement_name>]
+
+SELECT *返回所有字段和标记
+SELECT "<field_key>" 返回特定字段
+SELECT  "<field_key>","<field_key>"  返回多个字段
+SELECT "<field_key>","<tag_key>" 返回特定的字段和标记。该SELECT子句在包含标记时必须至少指定一个字段。
+
+machine是主机
+19d04baa1ea1
+
+一、从单个表中选择所有字段和标记
+SELECT * FROM "measurement"
+查询从measurement选择所有字段fields和标记tags
+
+二、从单个表中选择特定标记和字段
+SELECT "level description","location","water_level" FROM "measurement"
+
+instance是cpu啊
+
+一个database有多个measurements
+cpu_usage_per_cpu 
+cpu_usage_system
+cpu_usage_total
+cpu_usage_user
+fs_limit
+fs_usage
+load_average
+memory_usage
+memory_working_set
+rx_bytes
+rx_errors
+tx_bytes
+tx_errors
+
+
+
+TAG KEYS
+
+
+
+cpu_usage_per_cpu：
+container_name
+instance
+machine
+
+cpu_usage_system
+tagKey
+container_name
+machine
+
+cpu_usage_total
+tagKey
+container_name
+machine
+
+cpu_usage_user
+tagKey
+container_name
+machine
+
+fs_limit
+tagKey
+container_name
+device
+machine
+type
+
+fs_usage
+tagKey
+container_name
+device
+machine
+type
+
+load_average
+tagKey
+container_name
+machine
+
+memory_usage
+tagKey
+container_name
+machine
+
+memory_working_set
+tagKey
+container_name
+machine
+
+rx_bytes
+rx_errors
+tx_bytes
+tx_errors
+tagKey
+container_name
+machine
+
+有一个cadvisor的数据库，库中有多个measurements，如cpu，memory，fs，每个measurement都有多个tag-key，一个tag-key又有多个tag-value
+
+SELECE语句当有一个tag时必需指定至少一个field
+
+
+
+
+
+
+
+
+
+
+
+
+

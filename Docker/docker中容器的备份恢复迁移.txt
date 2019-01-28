@@ -1,0 +1,36 @@
+1.备份容器：
+docker commit -p [容器ID]  [备份后的name]
+-p (pause) : Pause container during commit
+备份后会生成一个Docker镜像的容器快照，可通过docker images查看
+
+有两种方法备份该快照：1.推送该镜像到Dockerhub；2.保存到本地为tar包的形式
+
+推送到dockerhub：
+docker login
+docker tag [容器ID]  [mwce/container-backup:test]
+docker push mwce/container-backup
+
+保存为tar包备份：
+docker save -o path/container-backup.tar  container-backup
+
+可通过ls path查看
+
+
+2.恢复容器：
+从Dockerhub拉：
+docker pull mwce/container-backup:test
+tar包备份：
+docker load -i path/container-backup.tar
+OK!!!
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,13 @@
+Linux Namespaces机制提供一种资源隔离方案。UTS、IPC、mount、PID、network、User等系统资源不再是全局性的，而是属于特定的Namespace。每个Namespace里面的资源对其他Namespace都是透明的，资源都是通过Namespaces抽象进来的。
+
+IPC:进程间通信的一种方式
+
+
+
+
+
+
+
+
+
+

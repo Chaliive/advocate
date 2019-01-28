@@ -1,0 +1,53 @@
+cAdvisor：
+单节点的资源信息收集工具，可以收集和导出数据
+两大功能：
+1.展示Host和容器两个层次的监控数据
+2.展示历史变化数据
+3.可以将数据导出给第三方工具
+
+cumulative CPU usage:
+cpu_usage_total
+cpu_usage_system
+cpu_usage_user
+cpu_usage_per_cpu
+
+Smoothed average of number of runnable threads * 1000
+可运行线程数的平滑平均值
+load_average
+
+Memory Usage
+memory_usage
+
+Working set size
+memory_working_set
+
+Cumulative count of bytes received
+rx_bytes
+
+Cumulative count of receice errors encountered.
+rx_errors
+
+Cumulative count of bytes transmitted
+tx_bytes
+
+Cumulative count of transmit errors encountered.
+tx_errors
+
+Filesystem device
+fs_device
+
+Filesystem limit
+fs_limit
+
+Filesystem usage
+fs_usage
+
+
+
+
+
+
+
+
+
+

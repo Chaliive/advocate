@@ -1,0 +1,9 @@
+docker stats：查看容器的运行情况，如：CPU、内存使用率、网络状态、磁盘空间等信息，动态显示
+结果如：
+CONTAINER           CPU %       MEM USAGE / LIMIT     MEM %       NET I/O             BLOCK I/O           PIDS
+e1ca3f4516d3        1.66%         32.64MiB / 31.21GiB       0.10%      4.27MB / 602MB      0B / 0B              15
+8de4f3aa455f        0.03%          23.54MiB / 31.21GiB      0.07%       3.46MB / 8.2MB      0B / 22.1MB       16
+9de35ebb2047        0.18%        49.64MiB / 31.21GiB      0.16%       168kB / 212kB       516kB / 172MB     12
+cfb5cbe45d53        0.00%         25.98MiB / 31.21GiB       0.08%      987kB / 6.8MB       36.6MB / 34.5MB  12
+
+

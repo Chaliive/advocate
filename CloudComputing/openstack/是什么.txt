@@ -1,0 +1,44 @@
+openstack是什么？
+只是系统的控制面，只是一个框架
+
+
+
+
+
+
+
+11
+
+
+VNC是一种开源的远程控制工具，在远程主机上运行vncserver服务后，本地主机上可以用两种方式登录VNC服务器来进行远程控制。一是用vncviewer客户端，二是用浏览器进行登录控制。以下主要介绍通过浏览器登录来控制远程主机。
+
+注意事项1：浏览器需要安装JAVA插件，才能登录控制VNC服务器
+
+步骤1：查看是否安装JAVA插件。方法如下：
+
+点击“工具”->“附加组件”->“插件”选项卡，查看是否有JAVA（TM）插件存在
+
+步骤2：若没有安装，那先下载JAVA插件，下载地址如下：
+
+http://www.java.com/zh_CN/download/linux_manual.jsp?locale=zh_CN&host=www.java.com，此文下载jre-6u20-linux-i586.bin
+
+步骤3：进行安装。
+
+chmod +x jre-6u20-linux-i586.bin
+
+./jre-6u20-linux-i586.bin
+
+步骤4：安装完成后，将将libjavaplugin_oji.so复制到/usr/lib/firefox-3.0-5/plugins/目录下。假若，没有plugins目录，那就先创建此目录。
+
+步骤5：重启Firefox浏览器，并重新查看是否正确安装JAVA插件。
+
+步骤6：如果正确安装了JAVA插件后，即可进行登录远程控制。方法是：在浏览器地址栏上输入“http://VNC远程主机的IP地址：端口号”。此处需要注意的是，在浏览器上默认以5800开始为VNC的访问端口，而在vncviewer客户端中以5900开始为VNC的访问端口。所以，在浏览器上访问VNC和用vncviewer客户端来访问VNC的端口是不一样的。例如，在浏览器地址栏处输入“http://192.168.2.84:5802”，而用vncviewer客户端则是“vncviewer 192.168.2.84:5902”
+
+假如，在浏览器上输入“http://192.168.2.84:5902”，则会出现“RFB 003.008 ”提示。
+
+
+yum -y install centos-release-openstack-queens
+
+
+
+

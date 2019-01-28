@@ -1,0 +1,33 @@
+查看数据保留策略：
+SHOW RETENTION POLICIES ON "db_name"
+RP：保留策略
+"db_name"：数据库名称
+
+新建数据保留策略：
+CREATE RETENTION POLICY "7_days" ON "db_name" DURATION 168h REPLICATION 1 DEFAULT
+"7_days" ：策略name
+"db_name"：数据库name
+DURATION ：持续时间，0代表无限制
+shardGroupDuration shardGroup的存储时间，shardGroup是influxdb的一个基本存储结构，应该大于这个时间的数据在查询效率上应该有所降低
+replicaN：全称是REPLICATION，副本个数
+default：是否是默认策略
+
+修改策略：
+ALTER RETENTION POLICY "2_hours" ON "telegraf" DURATION 4h DEFAULT
+ALTER：修改
+
+删除策略：
+DROP RETENTION POLICY "2_HOURS" ON "telegraf"
+
+
+
+
+
+
+
+
+
+
+
+
+

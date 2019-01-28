@@ -1,0 +1,71 @@
+awk概念：
+它是一个文本分析工具，grep查找，sed流编辑器，awk主要是对数据格式的输出和分析，就是把文件逐行的读入，以默认空格分隔每行，然后再进行分析处理的过程，AWK有它自己的编程语言，是三个主创人员的缩写，对数据的排序，对数据的处理，输出报告或者是报表的形式。
+
+
+工作流程：
+1、读取一行数据
+2、按照输入分隔符进行每行的拆分，分为n段
+3、将每一段设置成变量依次为$1到$n，$0是整个一行的内容
+4、格式化输出，循环处理其它各行
+
+
+awk [option] 'program' {'action statements'} file
+-F 指定字段分隔符
+-v 自定义变量
+
+action statements:(包含的一些命令)
+print
+
+例:
+1.取出文件的后5行，然后显示第二个字段和第四个字段
+tail -5 test.txt | awk '{print $2,$4}'
+tail -5 test.txt | awk -v FS=":" '{print $2,$4}' |-v FS=":"自定义:为分隔符
+
+2.取出文件的后5行，然后显示第二个字段，在该字段的前面显示hello字符
+tail -5 test.txt | awk '{print "hello:" $2}'
+
+awk -v FS=":" '{print $1,$3}' /etc/passwd
+
+awk -F: '{print NF}' /etc/passwd
+
+3.在/etc/passwd文件中，如果用户的ID大于1000，则用户类型为common，否则为system，然后输出$1和$3
+方法1.awk -F : '{if($3>=1000){print $1 "  usertype = common";} else{print $1 "  usertype = system"}}' /etc/passwd
+方法2.awk -F : '{$3>999?usertype="common":usertype="system";print $1,$3,usertype}' /etc/passwd
+
+
+sed和awk的比较：
+common：
+  都是读取每一行进行处理，
+differ:
+  sed是整行进行处理，处理方式有增删改查，它的action是用-e 'commnd',awk处理的方法更细，每行里的不同字段都能处理，并且可以以编程的方法进行处理
+awk -F ":" {} file
+{}里面可以有逻辑表达式的多种形式
+{for(){}}
+{if{}}
+{while(){}}
+awk -F ":" {for(i=0;i<10;i++)} filepath  
+
+
+练习:
+1.在/etc/passwd文件中，匹配第一个以r开头的行到第一个以t开头的行，并输出  | awk '/^r/,/^t/' /etc/passwd
+2.找到以root开头的行  | awk -F : '{if($1=="root") print $0}' /etc/passwd | awk '/root/' /etc/passwd
+3.在/etc/passwd有root关键字的所有行，并显示对应的shell  | awk -F : '{for(i=i;i<8;i++) if($i=="root"){print $0,$7}}' /etc/passwd 
+awk '/root/{print $7}' /etc/passwd
+4.统计当前目录下文件占用的字节数
+du ./ | tail -1|awk '{print $1}', du -s, 
+ll |awk '{print $5}'|awk 'BEGIN{sum=0}{sum=sum+$1}END{print sum}'
+5.打印文件字段的总和 ":" /etc/passwd
+6.实现文件的倒序输出
+awk '{a=$0;b=0;} {for(i=NF;i>0;i--){print $i}}' test.txt
+awk '{for(i=NF;i>0;i--){print $i}}' daoxu.txt
+
+
+
+
+
+
+
+
+
+
+

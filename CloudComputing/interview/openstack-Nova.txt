@@ -1,0 +1,32 @@
+Nova：
+
+一、nova-api:所有对nova的请求都先由nova-api处理，nova-api对外提供多个HTTP REST API接口，可以在keystone中查询nova-api的endpoints：docker endpoint show nova,他主要有三个作用：
+1.检查客户端传入的参数；
+2.调用Nova其他服务；
+3.格式化Nova其他服务返回的结果并返回给客户端。
+Nova接收的请求主要是对虚拟机的相关操作，如...
+在openstack中用instance即实例来表示虚拟机。
+
+二、nova-conductor
+nova-compute 需要获取和更新数据库中 instance 的信息。
+但 nova-compute 并不会直接访问数据库，而是通过 nova-conductor 实现数据的访问。
+这样做有两个显著好处：
+1.更高的系统安全性，因为一旦黑客入侵了计算节点就可以直接访问数据库。数据是无价的
+2.更好的系统伸缩性，通过增加nova-condutor的数量来增加计算节点对数据库的访问。
+
+三、nova-scheduler
+用nova-scheduler实现在哪个计算节点上启动instance，因为不同的用户可能对资源(CPU、内存、磁盘)有不同的需求。openstack将需求定义在flavor中，用户只需要指定用哪个flavor就可以了。
+
+四、nova-compute
+对节点上的instance进行管理。事实上是nova-compute与Hypervisor一起实现对instance生命周期的管理。
+nova-compute为Hypervisor定义统一的接口，Hypervisor只需要调用这些接口就可以实现二者间的配合。
+
+在该节点 nova-compute 的配置文件 /etc/nova/nova.conf 中配置所对应的 compute_driver 就可以了。对于KVM的Hypervisor就可以配置为libvirt.LibvirtDriver就行。
+
+创建instance：准备资源(flavor)-->创建镜像文件(从Glance下载image)-->创建xml文件-->创建虚拟网络并启动instance
+
+
+openstack查看日志
+各组件的日志以各组件英文首字母开头。
+OpenStack 的日志格式都是统一的，如下
+<时间戳><日志等级><代码模块><Request ID><日志内容><源代码位置>

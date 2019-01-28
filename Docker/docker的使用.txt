@@ -1,0 +1,4 @@
+使用 docker port [container_name]命令来查看当前映射的端口配置
+
+
+

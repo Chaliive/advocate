@@ -1,0 +1,16 @@
+查看磁盘的IO和网卡处理能力：
+top和iostat查看硬盘速度，lperf可以测试ICP和UDP带宽质量。
+
+如何远程判断某服务器是的某个tcp端口是否开放，分正常打开、打开但有源地址过滤、未开发这三种情况加以说明
+
+Linux三个时间戳：
+access time：访问时间atime
+modify time：修改时间mtime(文件的数据更改的时间)
+change time：改变时间ctime(文件的元数据更改的时间，mtime变，则ctime一定也跟着变)
+
+元数据：ls -l显示的就是文件的元数据，也就是文件的属性
+
+
+
+
+

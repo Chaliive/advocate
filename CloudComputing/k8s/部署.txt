@@ -1,0 +1,52 @@
+master文件:
+redis-master-controller.yaml
+---
+apiVersion: v1
+...
+...
+...
+redis-master-service.yaml
+---
+apiVersion: v1
+...
+...
+...
+
+
+kubectl create -f redis-master-controller.yaml
+kubectl create -f redis-master-service.yaml
+查看：
+kubectl get rc
+kubectl get pod
+
+
+slave文件:
+...
+...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

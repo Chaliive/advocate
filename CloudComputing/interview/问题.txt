@@ -1,0 +1,9 @@
+1.NGINX，TOMCAT，APACHE，REDIS的优化
+
+
+
+使用tar命令备份日志:
+vim /root/logbak.sh
+tar -czf log-`date +%Y%m%d`.tar.gz /var/log
+crontab -e
+00  03  *  *  5   /root/logbak.sh

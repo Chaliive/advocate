@@ -1,0 +1,33 @@
+云管理平台，通过WEB前端管理虚拟机。
+
+
+
+
+
+
+
+
+
+
+
+客户机
+
+用户机
+
+内核
+
+
+virt-install -n Nested-VM --description "Test Nest VM" --os-type=Linux --os-variant=rhel7 --ram=2048
+ --vcpus=2 --disk path=/var/lib/libvirt/images/nestedvm.img,bus=virtio,size=10 --graphics none --location /var/lib/libvirt
+
+
+
+
+
+
+
+
+
+
+
+

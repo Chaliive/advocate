@@ -1,0 +1,165 @@
+KVM:2.6.20放到Linux内核里面的
+
+1、KVM前身就是qume(全虚拟化的软件cpu，IO，内存)
+2、主要负责：虚拟化cpu和内核。通过ioctl接口实现，qemu主要负责：虚拟化IO
+
+具体操作
+1.打开cpu 虚拟开头。
+ 1.1物理机上
+ 1.2虚拟机里面设置勾选支持
+
+2.NET,Bridge 起虚拟机
+3.设置网桥()
+
+
+
+
+yum -y install libcanberra-gtk2 qemu-kvm.x84_64 qemu-kvm-tools.x86_64 libvirt.x86_64 libvirt-cim.x86_64 libvirt-client.x86_64 libvirt-java.noarch libvirt-python.x86_64 libiscsi-1.7.0-5.e16.x86_64 dbus-devel virt-clone tunctl virt-manager libvirt libvirt-python python-virtinst
+
+wget https://launchpad.net/cirros/trunk/0.3.0/+download/cirros-0.3.0-x86_64-disk.img
+
+
+tail /var/log/  # 想看日志
+
+
+KVM: 2.6.20放到Linux内核里面的内核
+主要模块
+
+1、KVM： 前身就是QEMU (全虚拟化的软件CPU、IO、内存)
+主要负责：虚拟化CPU 和内存。通过ioctl接口调用/dev/kvm 内核,实现虚拟化。
+2、QEMU：主要负责：虚拟化I/0（通过硬件辅助 virtio）实现虚拟化。
+3、Tools
+
+
+具体操作
+1 打开CPU 虚拟开关。
+ 1.1 物理机上
+ 1.2  虚拟机里面设置勾选支持虚拟化
+
+2 NAT ,Brige 起虚拟机
+3 设置网桥（后面做）
+安装指令
+yum install epel-release net-tools vim unzip zip wget ftp -y
+  141  lsmod|grep kvm
+
+  143  yum install qemu-kvm libvirt virt-install bridge-utils -y
+
+  145  systemctl start libvirtd
+  146  systemctl enable libvirtd
+  147  yum -y install  python-virtinst libvirt libvirt-python virt-manager libguestfs-tools bridge-utils virt-install
+
+  148  yum groupinstall " X Window System"
+  149  yum install -y dejavu-lgc-sans-fonts
+  150  yum groupinstall -y "Fonts"
+  151  init 6
+  152  ip a
+  153  systemctl restart network
+  154  mkdir /dvd
+  155  mount /dev/cdrom /dvd
+  156  cd /dvd
+  157  ls
+  158   yum install samba-client
+  159  yum install nfs-utils
+  160  yum install cifs* -y
+  161  smbclient -L //192.168.186.1 -U wanglei74@vip.sina.com
+  162  mount -t cifs //192.168.186.1/TDDOWNLOAD /dvd -o username=wanglei74@vip.sina.com
+
+167 dd if=/dev/cdrom of=/data/centos7u4_x86_64.iso
+
+  163  ls
+  164  cd ..
+  165  ls
+  166  cd /dvd
+  167  ls
+  168  cp CentOS-7-x86_64-DVD-1611.iso /root
+  169  ls
+  170  cd ..
+  171  cd /root
+  172  ls
+  173  ss -ntl
+  174  systemctl stop firewalld
+
+VNC server
+vnc 客户端：
+.使用virsh-install创建命令模式创建虚拟机
+//挂载系统光盘, 建立ISO镜像文件
+dd if=/dev/cdrom of=/data/centos7u4_x86_64.iso
+//创建虚拟机磁盘
+qemu-img create -f qcow2 /data/centos7u4-node1.qcow2 10G
+
+//创建虚拟机实例
+virt-install --name centos7u4-node1 \
+--virt-type kvm \
+--ram 1024 \
+--cdrom=/data/centos7u4_x86_64.iso \
+--disk path=/data/centos7u4-node1.qcow2 \
+--network bridge=br0 \
+--graphics vnc,listen=0.0.0.0 \
+--noautoconsole
+
+
+//查看正在运行的KVM虚拟机
+[root@kvm-node1 ~]# virsh list
+//查看所有KVM虚拟机
+[root@kvm-node1 ~]# virsh list --all
+
+//启动KVM虚拟机
+# virsh start name
+//关闭KVM虚拟机
+# virsh shutdown name
+//强制关闭KVM虚拟机
+# virsh destroy name
+
+//挂起KVM虚拟机
+# virsh suspend name
+//恢复挂起的虚拟机
+# virsh resume name
+
+//编辑KVM虚拟机的xml配置文件
+# virsh edit name
+//删除创建的KVM虚拟机
+# virsh undefine name
+
+快照命令：
+virsh snapshot-create centos7u4-node1 
+virsh snapshot-revert centos7u4-node1 
+---------------------------------
+
+在安装一台装Python3.6 mysql,flask 、模板
+在页面显示，在进行管理（明天和后天周六周日）
+
+python-librit
+调用上述命令，对虚拟机进行管理（增删改查，并且保存状态到MYsql.）
+
+
+
+
+1.安装KVM，打开"可虚拟化"，换成桥接模式，并用命令查看是否成功，安装libvirt及KVM
+2.安装vnc和配置vnc及设置vnc密码：yum -y install tigervnc-server tigervnc vnc vnc-server
+3.下载镜像：自己上传的镜像，镜像的位置不能是/root/下，否则报错permission deny
+
+virt-install --name centos7_2 --vcpu 1 --virt-type kvm --ram 1024 --location=/home/Cen....iso --disk path=/root/KVM_2.qcow2 --network bridge=br0 --graphics none --extra-args='console=ttyS0' --force
+
+
+
+qemu-img create -o preallocation=metadata -f qcow2 /root/KVM_2.qcow2 5G
+
+
+qemu-img create -f qcow2 /sdb1/KVM/KVM_2.qcow2 20G
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

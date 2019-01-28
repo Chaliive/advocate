@@ -1,0 +1,52 @@
+主机监控：
+1.插件采集的监控项
+采集频率为15秒一次
+
+
+2.ECS原生自带的监控项
+采集频率为1分钟一次
+
+
+
+Host.cpu.idle：当前空闲CPU百分比
+cpu_total：当前消耗的总CPU百分比，通常用于报警
+
+Host.disk.readbytes	磁盘每秒读取的字节数	byte/s
+Host.disk.writebytes	磁盘每秒写入的字节数	byte/s
+Host.disk.readiops	磁盘每秒的读请求数量	次/秒
+
+Host.disk.utilization	磁盘使用率	%
+
+RaffleDrawService容器监控
+CPU使用率--最大值--容器name1
+CPU使用率--最大值--容器name2
+内存使用百分比--最大值--容器name1
+内存使用百分比--最大值--容器name2
+
+RaffleDrawService负载均衡
+云产品监控--负载均衡
+端口活跃连接数
+端口并发连接数
+
+
+RaffleAwardService容器监控
+CPU使用率--最大值--容器name1
+CPU使用率--最大值--容器name2
+内存使用百分比--最大值--容器name1
+内存使用百分比--最大值--容器name2
+
+RaffleAwardService负载均衡
+端口活跃连接数
+端口并发连接数
+
+
+云服务器
+cpu使用率--最大值节点1，2
+内存实际占用空间
+
+
+
+
+
+
+

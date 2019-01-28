@@ -1,0 +1,91 @@
+docker build命令用于根据给定的Dockerfile和上下文以构建Docker镜像。
+
+
+COPY 和 ADD的区别就是url和tar
+URL
+WORKDIR 用于定义一个目录的路径
+VOLUME	
+RUN 指定docker build  安装用的
+CMD在docker run的时候运行的  启动服务用的
+
+
+例：
+mkdir
+vi Dockerfile
+FROM nginx  本地有用本地的，没有用网络的
+RUM echo '<h1>HELLO WORLD</h1>' > /usr/share/nginx/html/index.html
+
+docker build -t myimages1 .(空格点)
+
+
+
+一、任意创建一个目录
+二、进入目录，创建一个名为Dockerfile的文件
+三、编辑Dockerfile文件，内容如下：
+FROM nginx
+RUN echo '<h1>hello</h1>' > /usr/share/nginx/html/index.html
+保存退出
+四、运行命令：docker build -t myimages1 .
+五、查看创建的images：docker images
+六、运行创建的images：docker run -d -P myimages1
+七、docker ps查看port，ip加port访问
+
+
+docker run  -v $PWD/:/usr/src/myapp  -w /usr/src/myapp python:3.6 python hello.py
+
+$PWD 当前目录
+
+
+
+
+
+
+
+ 1057  wget http://download.oracle.com/otn-pub/java/jdk/8u191-b12/2787e4a523244c269598db4e85c51e0c/jdk-8u191-linux-x64.tar.gz
+ 1058  docker build -t java-env .
+ 1059  docker images
+ 1060  docker run -d java-env
+ 1061  docker ps
+ 1062  docker ps -a
+ 1063  docker exec -it peaceful_austin /bin/sh 
+ 1064  docker start peaceful_austin
+ 1065  docker exec -it peaceful_austin /bin/sh 
+ 1066  docker run -it python:3.6 /bin/sh
+ 1067  docker images
+ 1068  commit python
+ 1069  docker commit python
+ 1070  docker commit python:3.6
+ 1071  docker ps
+ 1072  docker ps -a
+ 1073  docker commit thirsty_davinci
+ 1074  docker ps -a
+ 1075  docker exec -it peaceful_austin /bin/sh -c
+ 1076  docker run -it java-env /bin/sh
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

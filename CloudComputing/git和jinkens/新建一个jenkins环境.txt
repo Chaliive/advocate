@@ -1,0 +1,65 @@
+一、创建一个git环境
+二、加入自己的代码
+git add wl5.txt
+git commit -m "wl5"  # "wl5"是对提交的文件的说明 
+git push
+git push -u origin master  # 初次提交
+
+三、本地环境连接github：
+configuration-->GitHub Server 
+名称任意，API URL不变，凭据 添加
+类型是Secret text
+
+Secret是在GitHub上通过
+Settings-->Developer settings-->Personal access tokens获取的
+
+在GitHub是添加凭据：
+类型：Username with password
+范围：全局
+用户名：root
+密码：zhou199567
+ID和描述任意
+
+
+事前先安装yum install -y libvirt-devel
+上传python3-libvirt 3.7
+解压
+tar -zxvf libvirt-python-3.7.0.tar.gz
+进入解压目录下
+
+安装步骤
+python  setup.py build
+sudo python  setup.py install 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

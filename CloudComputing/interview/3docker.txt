@@ -1,0 +1,184 @@
+Docker的优势：
+持续部署、版本控制、可移植性、隔离性和安全性(由Linux的namespaces实现)、小巧轻便
+
+Docker的核心组件：
+客户端：client：使用docker命令进行运行和构建容器
+服务器：daemon：运行在Docker host上，负责创建、运行、监控容器，构建、存储镜像
+镜像：Image：可以自己生成镜像，也可以下载镜像
+仓库：Registry：存放Docker镜像的仓库，分为公有和私有两种
+容器：Container：容器就是Docker镜像运行的实例
+
+
+Docker是C/S架构
+客户端向服务器发送请求，服务器负责构建、运行和分发容器。客户端和服务器可以运行在同一个 Host 上，客户端也可以通过 socket 或 REST API 与远程的服务器通信。
+
+docker的五种网络：
+1.host：主机共享，没有自己的网卡
+2.bridge  有自己的网卡
+3.container  容器共享
+4.none  什么都没有，自己配置
+5.overlay  多主机多容器共享
+
+指定方式--net=host，默认bridge 
+
+网络创建过程：
+1.先在主机上创建一对网卡设备，一端连接主机，一端连接容器
+2.连接主机的叫veth*，连接容器的叫eth0
+3. 从docker0子网中分配一个IP给容器使用，并设置docker0的IP地址为容器的默认网关。
+4.网桥 docker0 通过 iptables 中的配置与宿主机器上的网卡相连，所有符合条件的请求都会通过 iptables 转发到 docker0 并由网桥分发给对应的机器。会自动追加一条新的规则到iptables。
+
+一般问题：
+1.如何批量删除或停止运行的容器？
+docker kill/rm `docker ps -aq`
+2.如何查看镜像支持的环境变量？
+docker run IMAGE env
+3.本地的镜像文件存放的位置：
+/var/lib/docker,其中container目录存放的是容器的信息，graph目录存放镜像的信息，aufs存放具体的镜像底层文件
+4.如何临时退出一个正在交互的容器的终端，而不终止它？
+按Ctrl+p，后按Ctrl+q，如果按Ctrl+c会使容器内的应用进程终止，进而会使容器终止。
+5.很多应用容器都是默认后台运行的，怎么查看它们的输出和日志信息？
+使用docker logs，后面跟容器的名称或者ID信息
+6.如何控制容器占用系统资源（CPU，内存）的份额？
+可以在运行时加-c，-m参数
+7.Docker的配置文件放在那里。如何修改配置？
+CentOS系统配置文件存放在/etc/sysconfig/docker
+8.如何更改Docker的默认存储设置？
+Docker的默认存放位置是/var/lib/docker,如果希望将Docker的本地文件存储到其他分区，可以使用Linux软连接的方式来做。
+
+
+一、Docker的镜像结构：
+Docker通过扩展现有镜像，创建新的镜像，因此Docker是分层结构的，当启动容器时，一个新的可写屋被加载到镜像的顶部，这一层被称为容器层，容器层下的都叫镜像层。我们对容器的文件的所有操作(增删改查)都是有容器层的。
+
+
+二、Docker的镜像构建：
+1.commit构建：
+运行、修改、保存三步解决
+2.Dockerfile构建：
+例：
+FROM ubuntu
+RUN apt-get update && apt-get install -y vim
+
+docker build -t ubuntu-with-vim-Dockerfile .
+
+注意：
+1.Docker会默认从当前目录查找Dockerfile文件，当然可以用-f参数指定
+2.Dockerfile所在目录最好新建“.”表示当前目录，镜像在构建开始前会先将build 目录中的所有文件添加到镜像，因此不要把/ /usr ...目录作为build的目录。
+3.指令介绍：
+FROM：Dockerfile的第一条指令，如果在同一个Dockerfile中创建多个镜像，可以用多个FROM
+LABEL：为镜像添加标签，一个LABEL就是一个键值对。
+RUN：在shell终端中运行命令
+CMD：指定容器启动时执行的命令
+EXPOSE：指定容器要暴露的端口号
+ADD：复制指定的src到容器中的dest，可以是一个tar包
+COPY：同ADD，但不能是tar包
+ENTRYPOINT：同CMD，且不会被docker run提供的参数覆盖。
+
+
+
+docker的compose
+需要先安装：
+yum -y install epel-release
+yum -y install python-pip
+pip install docker-compose
+
+写一个compose.yaml文件如：
+web:
+    image: nignx:lastet
+    ports:
+        - "8080:80"
+    volumes:
+        - ./code:/usr/share/nginx/html
+        - ./site.conf:/etc/nginx/conf.d/site.conf
+    links:
+        - php
+php:
+    images: php:7-fpm
+    volumes:
+        - ./code:/var/www/html
+docker-compose up  # 就可以把compose.yaml文件的image进来
+
+
+docker的swarm
+一、docker swarm init   master初始化集群服务
+二、将docker swarm join...  在另一台服务器上执行
+三、docker service create --replicas 3 -p 8099:80 --name php1 nginx  创建nginx服务名为php1，自动负载均衡
+四、创建自己的images：
+  1.docker run --name n2 -d -p 8880:80 nginx  开启nginx服务
+  2.docker cp index.html  (container ID):/usr/share/nginx/html/ 把自己的页面放入，一定是cp的不能是目录挂载
+  3.docker commit (container ID) mynginx2 制作镜像,名主mynginx2
+五、docker service update --image mynginx2  php1  更新服务
+
+回滚 docker service update --rollback php1
+停止 docker service rm php1
+
+
+Docker version 17.05.0-ce, build 89658be
+
+docker0是一个网桥，它在内核层连通了其他的物理或虚拟网卡，这就将所有容器和本地主机都放到同一个物理网络。
+
+
+docker的配置文件有哪些选项
+k8s的6个yaml文件
+
+每一个使用 docker run 启动的容器其实都具有单独的网络命名空间
+
+
+
+Linux 命名空间(Namespaces)、控制组(Control Groups)和 UnionFS 三大技术支撑了目前 Docker 的实现
+
+1.Namespaces：
+全名空间是Linux为我们提供的用于分离进程树、网络接口、挂载点以及进程间通信(UTS、IPC、mount、PID、network、Use)等资源的方法，可以实现在同一台机器上的不同服务能做到完全隔离，就像运行在多台不同的机器上一样。Docker 通过命名空间可以成功完成与宿主机进程和网络的隔离
+
+
+2.Control Groups:
+实现了对多个容器的资源使用进行限制，它可以隔离宿主机上的物理资源，例如：CPU、内存、磁盘IO和网络带宽。每一个CGroup都是一组被相同的标准和参数限制的进程。
+
+
+3.UnionFS(AUFS):
+是一种为 Linux 操作系统设计的用于把多个文件系统‘联合’到同一个挂载点的文件系统服务
+
+
+
+docker system prune: 清除缓存
+
+
+
+Docker 存储可以分为分层文件系统和卷
+
+一、分层文件系统：
+AUFS的几个特点：
+1.AUFS 是一种联合文件系统，它把若干目录按照顺序和权限 mount 为一个目录并呈现出来
+2.默认情况下，只有第一层（第一个目录）是可写的，其余层是只读的。
+3.增加文件：默认情况下，新增的文件都会被放在最上面的可写层中。
+4.删除文件：因为底下各层都是只读的，当需要删除这些层中的文件时，AUFS 使用 whiteout 机制，它的实现是通过在上层的可写的目录下建立对应的whiteout隐藏文件来实现的。
+5.修改文件：AUFS 利用其 CoW （copy-on-write）特性来修改只读层中的文件。AUFS 工作在文件层面，因此，只要有对只读层中的文件做修改，不管修改数据的量的多少，在第一次修改时，文件都会被拷贝到可写层然后再被修改。
+6.节省空间：AUFS 的 CoW 特性能够允许在多个容器之间共享分层，从而减少物理空间占用。
+
+二、Docker 使用的 AUFS(联合文件系统) 文件系统
+docker info查看所使用的存储驱动
+
+我们都知道，docker是一个分层的结构，在我们的Dockerfile中，每次对原镜像作出改变都会生成一个镜像层，每次运行容器时，都会在所有的镜像层上生成一个容器层。我们知道，镜像层是只可读的，所以我们对文件的增删改查都是通过cow的形式。
+
+写一个job文件
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,15 @@
+生成一个Pod：
+1.用户用kubectl命令创建一个Pod，kubectl命令传输给APIServer；
+2.APIServer向etcd增加Pod对象；
+3.scheduler会从APIServer周期性的获取node和Pod的信息；
+4.当它得到创建Pod的信息后，会选择合适的Node创建Pod，进行创建binding；
+5.APIServer
+
+
+
+进入Pod的命令：
+kubectl exec -ti <your-pod-name>  -n <your-namespace>  -- /bin/sh
+
+
+
+

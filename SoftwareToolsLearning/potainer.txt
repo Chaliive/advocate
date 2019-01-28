@@ -1,0 +1,39 @@
+改变容器的ownership：
+点击进入容器-->Change ownership-->选择Public-->Update ownership
+
+
+
+
+docker run -d \
+--name=cadvisor \
+--net monitor \
+-p 8080:8080 \
+--mount type=bind,src=/,dst=/rootfs,ro \
+--mount type=bind,src=/var/run,dst=/var/run \
+--mount type=bind,src=/sys,dst=/sys,ro \
+--mount type=bind,src=/var/lib/docker/,dst=/var/lib/docker,ro \
+google/cadvisor \
+-storage_driver=influxdb \
+-storage_driver_db=cadvisor \
+-storage_driver_host=influxdb:8086
+
+docker run                                    \
+
+--volume=/:/rootfs:ro                         \
+
+--volume=/var/run:/var/run:rw                 \
+
+--volume=/sys:/sys:ro                         \
+
+--volume=/var/lib/docker/:/var/lib/docker:ro  \
+
+--publish=8082:8080                           \
+
+--detach=true                                 \
+
+--name=cadvisor                               \
+google/cadvisor:latest
+
+
+CREATE USER "root" WITH PASSWORD 'root' WITH ALL PRIVILEGES
+

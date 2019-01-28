@@ -1,0 +1,44 @@
+Variable values are fetched from a datasource query  变量值从数据源查询中提取
+
+Enabled you to dynamically switch the datasource for multiple panels  使您能够为多个面板动态切换数据源
+
+Define a timespan interval (ex 1m, 1h, 1d) 定义时间跨度间隔（例如1分钟、1小时、1天）
+
+Define variable values manually  手动定义变量值
+
+Define a hidden constant variable, useful for metric prefixes in dashboards you want to share
+定义一个隐藏常量变量，对于要共享的仪表板中的度量前缀很有用
+
+Add key/value filters on the fly  动态添加键/值过滤器
+
+Define a textbox variable, where users can enter any arbitrary string  定义一个文本框变量，用户可以在其中输入任意字符串
+
+Dashboard: This will fetch annotation and alert state changes for whole dashboard and show them only on the event's originating panel.
+仪表板：这将获取整个仪表板的注释和警报状态更改，并仅在事件的原始面板上显示它们。
+
+All: This will fetch any annotation events that match the tags filter.  全部：这将获取与标记过滤器匹配的任何注释事件。
+
+
+Annotation Query Failed   注释查询失败
+Query missing in annotation definition  注释定义中缺少查询
+
+select text from events where timeFilter limit 1000
+
+if your influxdb query returns more than one field you need to specify the column names below.An annotation event is composed of a title,tags,and an additional text field
+如果您的influxdb查询返回多个字段，则需要在下面指定列名。批注事件由标题、标记和其他文本字段组成。
+
+field mapping 字段映射
+
+
+
+
+
+
+
+
+
+
+
+
+
+

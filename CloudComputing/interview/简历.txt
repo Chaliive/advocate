@@ -1,0 +1,53 @@
+投递简历，笔试，面试，复试
+
+
+
+这个我不会，但是我知道...
+
+
+这个我知道，但希望面试官给我一点时间组织语言...
+who are you?  Chaliive
+what can you do?  DevOps
+what do you want to do?  development and mainteinance engneer
+
+基本信息：
+name  sex  age  schoolership  mail,wechat,language 
+
+求职岗位：开发运维工程师(一份简历只能对应一个岗位)
+
+工作经验，
+时间(2年级以上，从2016至今)，工作单位(**公司，翻到7-8月)，职位(开发运维工程师)，
+职位描述：
+ctrl+c  ctrl+v
+
+项目名称，软件环境(python)，项目周期(延长项目时间)，项目描述(专业性，具体性)，责任描述(提高自己在项目中的作用)，项目总结(价值、作用)
+
+python+kvm+libvirt+flask+mysql+docker+jenkins+git+html+js
+
+
+教育经历放在工作经验之后，没有证书
+
+职业技能：
+掌握的基本点(层次性，全面性)
+1、运维的
+2、开发的
+不写“精通”，一般写熟练，掌握，少写“了解”
+
+
+
+自我评价
+
+排版要求：
+
+标题用二号宋体，
+
+简历命名
+姓名-岗位-经验-本科
+
+
+
+
+
+
+
+
