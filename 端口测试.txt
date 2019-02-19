@@ -1,0 +1,55 @@
+url请求：如果健康，print(health)
+否则：发送邮件
+
+
+定义一个测试方法
+check(service)
+    tempUrl = 'http://' +ａ
+    try:
+        opener.open(tempUrl)
+        return True
+    except:
+        return service
+定义一个发送邮件的方法
+mail()
+main():
+    for ip in ips:
+    ip = open(ip)
+    result = check(ip)
+    if not result:
+        mail()
+
+
+pasqlqrwljwrjejf
+
+ip_test = check(ip)
+if ip_test == True:
+    if ip in fail_ip_list:
+        fail_ip_list.delet(ip)
+else:
+    fail_ip_list.append(ip)
+    mail()
+
+
+
+如果检测IP通过，
+如果检测IP不通过，先发送邮件，但为避免重复发送邮件，则把IP加入一个fail_ip_list的列表中，第二次检测不通过时，先判断这个IP是否在fail_ip_list中，如果在，则不再重复发送邮件，第二次检测通过时，如果这个IP还在fail_ip_list中，则把这个IP从fail_ip_list中删除。
+
+if not ip_test:        # 检测不通过 
+    if IP not in fail_ip_list:   # 且不在fail_ip_list
+        fail_ip_list.append(IP)  # 则加入到fail_ip_list并且发送邮件
+        mail(ip)
+else:  # 检测通过的话
+    if IP in fail_ip_list:
+        fail_ip_list.delet(IP)
+
+
+能通过，是否在失败列表中，
+不能通过，是否在失败列表中。
+
+
+
+
+
+
+

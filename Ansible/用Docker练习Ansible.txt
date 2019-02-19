@@ -1,0 +1,33 @@
+怎样用Ansible操控用Docker开好的容器？
+1.取得容器的OpenSSH设定：请注意端口映射的值：0.0.0.0:32805->22/tcp
+
+2.设定ansible.cfg:将remote_user设置为docker
+vi ansible.cfg
+[defaults]
+hostfile = hosts
+remote_user = docker
+host_key_checking = False
+
+3.设定hosts
+vi hosts
+server1 ansible_ssh_host=127.0.0.1 ansible_ssh_port=32805 ansible_ssh_pass=docker
+
+[local]
+server1
+
+ansible_ssh_host：设置本机的IP
+ansible_ssh_port：设置为docker ps 时取得的ssh port的值 
+ansible_ssh_pass：因为没有连线用的ssh密钥，故直接使用密码的方式进行连接，建议只用于测试环境
+
+当以上的设置都完成了，我们就可以在终端用Docker建立好的容器来练习Ansible了
+ansible all -m command -a 'echo Hello World on Docker.'
+server1 | SUCCESS | rc=0 >>
+Hello World on Docker.
+
+
+
+
+
+
+
+

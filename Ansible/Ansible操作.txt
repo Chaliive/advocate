@@ -1,0 +1,17 @@
+一般来说，我们可以用Ad-Hoc command 和 Playbook两种方式来操作ansible
+前者是通过一次次简短的指令来操作Ansible，而后者则是先把任务写好，然后再一次执行。两者的关系就好比我们在Linux Shell里打打指令和先写个 Shell Script再执行一样。
+
+1.Ad-Hoc Commands 可以翻译为简短的指令，以常见的ping和echo操作为例
+ping：
+$ ansible all -m ping
+$ ansible all -m command -a "echo Hello World"
+
+2.Playbooks 即是剧本，我们可以通过事先写好的剧本来让各个managed node进行指定的动作(Plays)和任务(Tasks).
+简而言之，Playbooks是Ansible的脚本，而且还是个比传统Shell Script还强大的脚本
+
+在一份Playbook中，可以多个Player、多个Task和多个Module。
+
+
+
+
+

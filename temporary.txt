@@ -101,6 +101,28 @@ tmpfs:     67108864
 https://github.com/aploium/shootback
 
 
+gcsMySQL@567.com
+
+
+jiangsu
+zhejiang
+anhui
+
+instanceId
+lb-2ze4b72is6te5it73us11  安徽
+lb-2ze79812unhoiua3psiuz  浙江
+lb-2zebw5ts0338fqnzuz6kp  江苏
+
+
+浙江：磁盘使用率、内存使用率、带宽、CPU使用率
+安徽：磁盘使用率、CPU使用率、内存使用率、带宽
+江苏：磁盘使用率、内存使用率、CPU使用率、带宽
+
+
+CPU使用率、内存使用率、公网流出带宽使用率、磁盘使用率、1，5，15分钟平均负载、磁盘IO读写、inode使用率、端口连接数、丢包数
+
+439行看memory limit
+8367247360
 
 
 

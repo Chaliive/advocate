@@ -1,0 +1,41 @@
+Ansible是怎么动作的？
+在Ansible的世界里，我们会通过inventory文件来定义有哪些managed node（被控制节点），并借由ssh和Python进行沟通。
+换句话说，当Control Machine（主控端）可以用ssh连上managed node，且被连上的机器里预装有Python时，Ansible就可以运作了！
+
+Control Machine：主控机
+managed node：被控端
+
+Ansible的安装：
+一般情况下，我们只需在主控机里安装Ansible即可
+CentOS中安装：
+1.新增epel-release第三方套件来源
+sudo yum install -y epel-release
+2.安装Ansible
+sudo yum install -y ansible
+
+Python（pip）安装：
+Ansible近来更新的速度很快，若想追求较新的版本可用pip的方式进行安装，但不建议初学者使用。
+需要先安装pip：
+CentOS：sudo yum -y install python-pip
+升级 pip：sudo pip install -U pip
+安装Ansible：sudo pip install ansible
+
+怎么设定Ansible？
+我们可以借由ansible.cfg来设定预设的inventory文件的路径、远端使用者名称和ssh路径等相关设定。
+1.安装好Ansible后，我们可以在/etc/ansible的目录下找到Ansible的配置文件
+2.通常我们会把ansible.cfg和hosts这两个文件与其它的playbooks放在同一个目录下，然后通过版本控制系统（如git）把它们一起储存起来，以实现Ansible
+
+inventory是什么？
+在ansible中，我们把它当成一个主机列表，我们可以通过它对定义每个managed node 的代号、IP地址、连线相关资讯和Group
+
+
+
+
+
+
+
+
+
+
+
+

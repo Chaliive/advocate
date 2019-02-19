@@ -1,0 +1,37 @@
+在influxdb中存储的数据：
+源码如下：
+	// Cumulative CPU usage  累计CPU使用率
+	serCpuUsageTotal  string = "cpu_usage_total"
+	serCpuUsageSystem string = "cpu_usage_system"
+	serCpuUsageUser   string = "cpu_usage_user"
+	serCpuUsagePerCpu string = "cpu_usage_per_cpu"
+	// Smoothed average of number of runnable threads x 1000.
+	可运行线程数的平滑平均值*1000
+	serLoadAverage string = "load_average"
+	// Memory Usage  内存使用量
+	serMemoryUsage string = "memory_usage"
+	// Working set size 
+	serMemoryWorkingSet string = "memory_working_set"
+	// Cumulative count of bytes received.
+	serRxBytes string = "rx_bytes"
+	// Cumulative count of receive errors encountered.
+	serRxErrors string = "rx_errors"
+	// Cumulative count of bytes transmitted.
+	serTxBytes string = "tx_bytes"
+	// Cumulative count of transmit errors encountered.
+	serTxErrors string = "tx_errors"
+	// Filesystem device.
+	serFsDevice string = "fs_device"
+	// Filesystem limit.
+	serFsLimit string = "fs_limit"
+	// Filesystem usage.
+	serFsUsage string = "fs_usage"
+
+
+
+
+
+
+
+
+
