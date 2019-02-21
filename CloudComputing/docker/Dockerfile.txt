@@ -1,0 +1,11 @@
+FROM python:3
+MANTAINER zhoucy567@qq.com
+RUN \
+
+
+
+pipenv ”ÎPycharm
+
+
+
+

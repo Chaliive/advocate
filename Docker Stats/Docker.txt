@@ -1,0 +1,28 @@
+docker ps/top/logs
+docker stats
+docker Remote API
+docker 伪文件系统
+
+docker stats:
+该命令默认以流式方式输出，如果想打印最新的数据并立即退出，可以使用no-stream=true参数
+
+Remote API
+Docker Remote API是一个远程命令行界面rcli的REST API如：
+curl http://127.0.0.1:4243/comtainers/json
+可以使用API来获取监控数据并集成到其他系统，注意不要给Docker daemon带来性能负担
+
+
+第一次访问成功，则不进行第二次访问，
+第一次访问失败，进行第二次访问，连续三次访问失败则报警
+
+
+
+
+
+
+
+
+
+
+
+

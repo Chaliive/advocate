@@ -21,8 +21,6 @@ failed to push some refs to 'git@github.com:yourName/yourRepo.git'
 git push -u origin master
 OK!!
 
-git log查看提交历史
-
 12如果出现错误
 fatal: remote origin already exists.
 则：git remote rm origin

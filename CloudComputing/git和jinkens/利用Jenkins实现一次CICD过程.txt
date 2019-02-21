@@ -1,0 +1,54 @@
+1.代码开发
+
+2.写Dockerfile, Dockerfile与README.md位于同一层级，整个开发文件的最外层
+
+FROM python:3.6-alpine
+
+COPY . /service/   #将当前目录下所有文件（包括Dockerfile和README.md文件）
+WORKDIR /service/scanServer  #改变工作目录
+
+RUN pip install -r requirements.txt -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com  # 下载脚本中用到的第三方库，注意requirements.txt文件的生成方式
+
+ENTRYPOINT ["python", "check_ips.py"]  # 容器开启后的执行语句
+
+3.push代码到代码管理仓库Gitee或者GitHub等
+
+4.配置Jenkins：
+New 任务：
+General：无配置
+Source Code Management（源码管理）：
+选择Git：
+Repositories：
+	Repository URL(代码路径)  https://gitee.com/cl_rd_team/DevOps.git
+	Credentials(Git上的用户认证)：Add  
+		Username  Chaliive
+		Password    gcs**********com
+
+Branches to build（分支构建）：
+	Branch Specifier （blank for “any”）*/master
+
+
+
+
+Build:
+选择Build  / Publish Docker Image
+Dirctory for Dockerfile	.（表示当前目录）
+Cloud	docker-192.168.1.200
+Image(镜像名字)       registry.cn-beijing.aliyun.com/bdcnlink/scan_server:${BUILD_NUMBER}	版本
+		registry.cn-beijing.aliyun.com/bdcnlink/scan_server:latest  每次最新构建为最新
+Push image（推送镜像）	打钩
+Registry Credentials(仓库认证)    Add:配置仓库账号密码
+Clean local images（清楚本地镜像）
+
+Save
+立即构建
+
+
+5.上Portainer部署容器
+
+
+
+
+
+
+

@@ -125,5 +125,22 @@ CPUÊ¹ÓÃÂÊ¡¢ÄÚ´æÊ¹ÓÃÂÊ¡¢¹«ÍøÁ÷³ö´ø¿íÊ¹ÓÃÂÊ¡¢´ÅÅÌÊ¹ÓÃÂÊ¡¢1£¬5£¬15·ÖÖÓÆ½¾ù¸ºÔØ¡¢´ÅÅ
 8367247360
 
 
+import logging
+logging.warning('msg')
+
+µÚÒ»´ÎÇëÇó²»Í¨¹ý£¬µÚ¶þ´ÎÇëÇóÍ¨¹ý£¬Ó¦¸Ã±¨¾¯´Ófail_ip_listÁÐ±íÖÐÈ¡³öÕâ¸öip£¬²»È»µÄ»°£¬Õâ¸öipÒ»Ö±ÔÚÁÐ±íÖÐ£¬ÏÂ´ÎÔÙ³ö´íÊ±
+
+JenkinsÑ§Ï°
+python ÐéÄâ»·¾³
+
+
+
+
+
+
+
+
+
+
 
 
