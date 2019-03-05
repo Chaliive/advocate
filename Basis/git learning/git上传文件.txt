@@ -25,3 +25,8 @@ OK!!
 fatal: remote origin already exists.
 则：git remote rm origin
 
+
+每次新的提交执行命令：
+git commit -m ".."
+git add .
+git push origin master
